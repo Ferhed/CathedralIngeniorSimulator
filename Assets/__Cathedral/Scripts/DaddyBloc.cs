@@ -37,6 +37,16 @@ public class DaddyBloc : MonoBehaviour {
         Destroy(gameObject);
     }
 
+    public void stopBloc()
+    {
+        StopCoroutine("launch");
+    }
+
+
+    public void OnMouseDown()
+    {
+        Debug.Log(gameObject.name);
+    }
 
     private void spawnPrefabGround()
     {

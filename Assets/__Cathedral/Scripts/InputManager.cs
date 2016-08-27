@@ -36,7 +36,20 @@ public class InputManager : MonoBehaviour
                 {
                     StartCoroutine(c.transform.GetComponent<Bloc>().DestroyMe());
                 }
+                else if (c.transform.tag == "DaddyBloc")
+                {
+                    c.transform.GetComponent<DaddyBloc>().stopBloc();
+                }
             }
+        }
+        else
+        {
+            Collider2D collider = Physics2D.OverlapCircle(v, 0.3f);
+            if (collider != null && collider.tag == "DaddyBloc")
+            {
+                collider.transform.GetComponent<DaddyBloc>().stopBloc();
+            }
+
         }
     }
 }

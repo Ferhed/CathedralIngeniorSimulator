@@ -6,7 +6,6 @@ public class Bloc : MonoBehaviour
 {
     void Awake()
     {
-        collider = GetComponent<BoxCollider2D>();
 
         foreach(Transform tr in transform.parent.GetComponentsInChildren<Transform>())
         {
@@ -30,6 +29,8 @@ public class Bloc : MonoBehaviour
     {
         transform.parent = Cathedral.Instance.transform;
         rigidBody = gameObject.AddComponent<Rigidbody2D>();
+        collider = gameObject.AddComponent<BoxCollider2D>();
+        collider.size = Vector2.one / 2;
 
         CheckForDestroyOnBot();
 
