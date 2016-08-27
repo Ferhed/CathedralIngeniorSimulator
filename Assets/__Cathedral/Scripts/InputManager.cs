@@ -44,7 +44,7 @@ public class InputManager : MonoBehaviour
         }
         else
         {
-            Collider2D collider = Physics2D.OverlapCircle(v, 0.3f);
+            Collider2D collider = Physics2D.OverlapCircle(v, overlapRange);
             if (collider != null && collider.tag == "DaddyBloc")
             {
                 collider.transform.GetComponent<DaddyBloc>().stopBloc();
@@ -52,4 +52,6 @@ public class InputManager : MonoBehaviour
 
         }
     }
+    [SerializeField]
+    private float overlapRange = 0.3f;
 }

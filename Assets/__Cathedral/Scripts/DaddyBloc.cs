@@ -40,6 +40,7 @@ public class DaddyBloc : MonoBehaviour {
     public void stopBloc()
     {
         StopCoroutine("launch");
+        GetComponent<BoxCollider2D>().isTrigger = false;
     }
 
 
