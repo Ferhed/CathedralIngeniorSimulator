@@ -18,11 +18,9 @@ public class Launcher : MonoBehaviour {
             posX+=startSpawnRange;
         else
             posX-=startSpawnRange;
-        Debug.Log("instance position : " + posX);
         transform.position = new Vector3(posX, transform.position.y, transform.position.z);
         GameObject instance = Instantiate(prefabs[Random.Range(0, prefabs.Count)], transform.position, Quaternion.identity) as GameObject;
         instance.GetComponent<DaddyBloc>().StartCoroutine("launch", curve);
-        //Debug.Log("instance position : " + instance.transform.position.x);
     }
 
     public void OnDrawGizmosSelected()

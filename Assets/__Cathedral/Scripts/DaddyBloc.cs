@@ -9,10 +9,10 @@ public class DaddyBloc : MonoBehaviour {
         foreach(Collider2D col in GetComponentsInChildren<Collider2D>())
             col.isTrigger = true;
         launchLenght = Mathf.Abs(transform.position.x) * 2f;
-        launchHeight = Random.Range(1f, 1.3f)*launchHeight;
+        launchHeight = (Random.Range(0f, heightVariance)+1)*launchHeight;
 	}
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.transform.tag.Equals("Ground"))
         {
@@ -24,16 +24,17 @@ public class DaddyBloc : MonoBehaviour {
                 Destroy(gameObject);
             }
         }
-        else 
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        Destroy(gameObject.GetComponent<Collider2D>());
+        Destroy(gameObject.GetComponent<Rigidbody2D>());
+        foreach (Bloc bloc in transform.GetComponentsInChildren<Bloc>())
         {
-            Destroy(gameObject.GetComponent<Collider2D>());
-            Destroy(gameObject.GetComponent<Rigidbody2D>());
-            foreach(Bloc bloc in transform.GetComponentsInChildren<Bloc>())
-            {
-                bloc.DetachBloc();
-            }
-            Destroy(gameObject);
+            bloc.DetachBloc();
         }
+        Destroy(gameObject);
     }
 
 
@@ -76,6 +77,8 @@ public class DaddyBloc : MonoBehaviour {
     private float launchHeight;
     [SerializeField]
     private float launchLenght;
+    [SerializeField]
+    private float heightVariance;
     [SerializeField]
     private bool spawnOnGround = false;
 
