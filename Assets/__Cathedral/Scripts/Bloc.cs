@@ -30,11 +30,11 @@ public class Bloc : MonoBehaviour
         transform.parent = Cathedral.Instance.transform;
         rigidBody = gameObject.AddComponent<Rigidbody2D>();
         collider = gameObject.AddComponent<BoxCollider2D>();
-        collider.size = Vector2.one / 2;
+        collider.size = Vector2.one * 0.19f;
 
         CheckForDestroyOnBot();
 
-        var gap = collider.size.x / 4.0f;
+        var gap = collider.size.x / 2.0f;
         var ray_left = transform.position + Vector3.left * gap * 0.9f - Vector3.up * gap * 1.1f;
         var ray_right = transform.position + Vector3.right * gap * 0.9f - Vector3.up * gap * 1.1f;
         
@@ -56,8 +56,24 @@ public class Bloc : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         rigidBody.constraints = RigidbodyConstraints2D.None;
+        
+        var gap = collider.size.x / 2.0f;
+        var ray_left = transform.position + Vector3.left * gap * 0.9f + Vector3.up * gap * 1.1f;
+        var ray_right = transform.position + Vector3.right * gap * 0.9f + Vector3.up * gap * 1.1f;
 
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector3.up, 0.2f);
+        RaycastHit2D hit_left = Physics2D.Raycast(ray_left, Vector3.up, 0.1f);
+        RaycastHit2D hit_right = Physics2D.Raycast(ray_right, Vector3.up, 0.1f);
+
+        if(hit_left.collider != null)
+        {
+            StartCoroutine(hit_left.transform.GetComponent<Bloc>().ActivePhysics());
+        }
+        if (hit_right.collider != null)
+        {
+            StartCoroutine(hit_right.transform.GetComponent<Bloc>().ActivePhysics());
+        }
+
+        /*RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector3.up, 0.2f);
         if(hits.Length > 0)
         {
             foreach(RaycastHit2D hit in hits)
@@ -69,7 +85,7 @@ public class Bloc : MonoBehaviour
                     StartCoroutine(hit.transform.GetComponent<Bloc>().ActivePhysics());
                 }
             }
-        }
+        }*/
     }
 
     public IEnumerator DestroyMe()
@@ -89,22 +105,18 @@ public class Bloc : MonoBehaviour
     {
         if(Vector3.Dot(Vector3.up,transform.up)> 0.5f)
         {
-            Debug.Log("top");
             return topWeakness;
         }
         else if(Vector3.Dot(Vector3.up, -transform.up) > 0.5f)
         {
-            Debug.Log("bot");
             return botWeakness;
         }
         else if (Vector3.Dot(Vector3.up, transform.right) > 0.5f)
         {
-            Debug.Log("right");
             return rightWeakness;
         }
         else
         {
-            Debug.Log("left");
             return leftWeakness;
         }
     }

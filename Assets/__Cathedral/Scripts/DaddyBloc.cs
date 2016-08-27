@@ -43,12 +43,6 @@ public class DaddyBloc : MonoBehaviour {
         GetComponent<BoxCollider2D>().isTrigger = false;
     }
 
-
-    public void OnMouseDown()
-    {
-        Debug.Log(gameObject.name);
-    }
-
     private void spawnPrefabGround()
     {
         // spawn a prefab on ground Collision (house, tree)
