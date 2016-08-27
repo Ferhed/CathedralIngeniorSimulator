@@ -45,7 +45,7 @@ public class DaddyBloc : MonoBehaviour {
     {
         StopCoroutine("launch");
         collider.isTrigger = false;
-        RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position, collider.size, 0, Vector2.down,50.0f);
+        RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position, collider.size, 0, Vector2.down);
         foreach(RaycastHit2D hit in hits)
         {
             if(!hit.transform.GetComponent<DaddyBloc>())
@@ -55,6 +55,11 @@ public class DaddyBloc : MonoBehaviour {
                 break;
             }
         }
+    }
+
+    public void OnMouseDown()
+    {
+        stopBloc();
     }
 
     private void spawnPrefabGround()

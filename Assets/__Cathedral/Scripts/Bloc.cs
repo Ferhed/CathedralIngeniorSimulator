@@ -33,7 +33,7 @@ public class Bloc : MonoBehaviour
         transform.parent = Cathedral.Instance.transform;
         rigidBody = gameObject.AddComponent<Rigidbody2D>();
         collider = gameObject.AddComponent<BoxCollider2D>();
-        collider.size = Vector2.one * 0.18f;
+        collider.size = Vector2.one * 19.0f;
 
         CheckForDestroyOnBot();
 
@@ -41,8 +41,8 @@ public class Bloc : MonoBehaviour
         var ray_left = transform.position + Vector3.left * gap * 0.9f - Vector3.up * gap * 0.9f;
         var ray_right = transform.position + Vector3.right * gap * 0.9f - Vector3.up * gap * 0.9f;
         
-        RaycastHit2D[] hit_left = Physics2D.RaycastAll(ray_left, Vector3.down, 0.1f);
-        RaycastHit2D[] hit_right = Physics2D.RaycastAll(ray_right, Vector3.down, 0.1f);
+        RaycastHit2D[] hit_left = Physics2D.RaycastAll(ray_left, Vector3.down, 10.0f);
+        RaycastHit2D[] hit_right = Physics2D.RaycastAll(ray_right, Vector3.down, 10.0f);
         
         if (hit_left.Length > 0 ||hit_right.Length > 0 )
         {
@@ -70,9 +70,9 @@ public class Bloc : MonoBehaviour
         var ray_left = transform.position + Vector3.left * gap * 0.9f + Vector3.up * gap * 0.9f;
         var ray_right = transform.position + Vector3.right * gap * 0.9f + Vector3.up * gap * 0.9f;
 
-        RaycastHit2D[] hit_left = Physics2D.RaycastAll(ray_left, Vector3.up, 0.1f);
-        RaycastHit2D[] hit_right = Physics2D.RaycastAll(ray_right, Vector3.up, 0.1f);
-
+        RaycastHit2D[] hit_left = Physics2D.RaycastAll(ray_left, Vector3.up, 10.0f);
+        RaycastHit2D[] hit_right = Physics2D.RaycastAll(ray_right, Vector3.up, 10.0f);
+        
         if(hit_left.Length > 0)
         {
             foreach(RaycastHit2D hit in hit_left)

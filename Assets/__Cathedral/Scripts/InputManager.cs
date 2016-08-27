@@ -22,7 +22,7 @@ public class InputManager : MonoBehaviour
     public void ScreenMouseRay()
     {
         Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z = 0.01f;
+        mousePosition.z = 0.0f;
 
         Vector2 v = Camera.main.ScreenToWorldPoint(mousePosition);
 
