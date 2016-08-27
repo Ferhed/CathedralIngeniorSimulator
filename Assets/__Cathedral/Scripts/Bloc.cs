@@ -1,17 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Bloc : MonoBehaviour
 {
     void Awake()
     {
         collider = GetComponent<BoxCollider2D>();
+
+        foreach(Transform tr in transform.parent.GetComponentsInChildren<Transform>())
+        {
+            if(tr != transform)
+            {
+                brothers.Add(tr);
+            }
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if( rigidBody!= null
+            && rigidBody.velocity.y > velocityForDestruct)
+        {
+            CheckForDestroyOnBot();
+        }
     }
 
     public void DetachBloc()
     {
         transform.parent = Cathedral.Instance.transform;
         rigidBody = gameObject.AddComponent<Rigidbody2D>();
+
+        CheckForDestroyOnBot();
 
         var gap = collider.size.x / 4.0f;
         var ray_left = transform.position + Vector3.left * gap * 0.9f - Vector3.up * gap * 1.1f;
@@ -35,8 +55,8 @@ public class Bloc : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         rigidBody.constraints = RigidbodyConstraints2D.None;
-        
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector3.up, 0.25f);
+
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector3.up, 0.2f);
         if(hits.Length > 0)
         {
             foreach(RaycastHit2D hit in hits)
@@ -53,6 +73,7 @@ public class Bloc : MonoBehaviour
 
     public IEnumerator DestroyMe()
     {
+        IsWeakOnTop();
         Destroy(GetComponent<SpriteRenderer>());
         yield return new WaitForSeconds(timeToDestruct);
 
@@ -63,9 +84,64 @@ public class Bloc : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public bool IsWeakOnTop()
+    {
+        if(Vector3.Dot(Vector3.up,transform.up)> 0.5f)
+        {
+            Debug.Log("top");
+            return topWeakness;
+        }
+        else if(Vector3.Dot(Vector3.up, -transform.up) > 0.5f)
+        {
+            Debug.Log("bot");
+            return botWeakness;
+        }
+        else if (Vector3.Dot(Vector3.up, transform.right) > 0.5f)
+        {
+            Debug.Log("right");
+            return rightWeakness;
+        }
+        else
+        {
+            Debug.Log("left");
+            return leftWeakness;
+        }
+    }
+
+    private void CheckForDestroyOnBot()
+    {
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector3.down, 0.2f);
+
+        foreach (RaycastHit2D hit in hits)
+        {
+            if (hit.transform != transform
+                && hit.collider.tag == "Bloc"
+                && !brothers.Contains(hit.transform)
+                )
+            {
+                var bloc = hit.transform.GetComponent<Bloc>();
+                if (bloc.IsWeakOnTop())
+                {
+                    Destroy(bloc.gameObject);
+                }
+            }
+        }
+    }
+
     [SerializeField]
     private float timeToDestruct = 0.5f;
+    [SerializeField]
+    private float velocityForDestruct = 0.2f;
+    [SerializeField]
+    private bool topWeakness = false;
+    [SerializeField]
+    private bool botWeakness = false;
+    [SerializeField]
+    private bool leftWeakness = false;
+    [SerializeField]
+    private bool rightWeakness = false;
 
+    private List<Transform> brothers = new List<Transform>();
     private Rigidbody2D rigidBody;
     private BoxCollider2D collider;
 }
