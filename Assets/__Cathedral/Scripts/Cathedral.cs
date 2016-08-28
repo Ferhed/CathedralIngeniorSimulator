@@ -6,6 +6,7 @@ public class Cathedral : MonoBehaviour
 {
     public static Cathedral Instance { get; private set; }
     public float MaxHeight { get; private set; }
+    public float MaxBuildHeight { get { return maxBuildHeight; } }
 
     void Awake()
     {
@@ -123,6 +124,8 @@ public class Cathedral : MonoBehaviour
     private float blocSize;
     [SerializeField]
     private List<GameObject> pelerinPrefabs = new List<GameObject>();
+    [SerializeField]
+    private float maxBuildHeight= 600.0f;
 
     private float completion;
     private float minPelerinX;

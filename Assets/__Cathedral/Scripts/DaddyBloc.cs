@@ -177,7 +177,7 @@ public class DaddyBloc : MonoBehaviour {
     [SerializeField]
     private float gapAboveTheMaxHeight = 10.0f;
     [SerializeField]
-    private float rotationSpeed = 1.0f;
+    private float rotationSpeed = 150.0f;
 
     private BoxCollider2D collider;
     private bool isLaunched = false;
