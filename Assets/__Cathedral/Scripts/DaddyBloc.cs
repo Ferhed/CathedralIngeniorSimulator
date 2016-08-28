@@ -46,6 +46,10 @@ public class DaddyBloc : MonoBehaviour {
                 Destroy(gameObject);
             }
         }
+        if (collision.transform.tag.Equals("Zone") && released)
+        {
+            Cathedral.Instance.SpawnPelerin(pelerinToSpawn);
+        }
     }
 
     void OnTriggerExit2D(Collider2D collision)
@@ -54,10 +58,6 @@ public class DaddyBloc : MonoBehaviour {
         {
             if (!isLaunched)
                 isLaunched = true;
-        }
-        if(collision.transform.tag.Equals("Zone"))
-        {
-            Cathedral.Instance.SpawnPelerin(pelerinToSpawn);
         }
     }
 
@@ -83,6 +83,7 @@ public class DaddyBloc : MonoBehaviour {
 
     public void GoPosition()
     {
+        released = true;
         IsMovableByMouse = false;
         RotateBlock();
         GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
@@ -96,6 +97,13 @@ public class DaddyBloc : MonoBehaviour {
                 break;
             }
         }
+        GameObject zone = GameObject.FindGameObjectWithTag("Zone");
+        if (zone.GetComponent<BoxCollider2D>().bounds.Contains(transform.position))
+        {
+            Cathedral.Instance.SpawnPelerin(pelerinToSpawn);
+            released = false;
+        }
+
     }
 
     private void spawnPrefabGround()
@@ -174,4 +182,5 @@ public class DaddyBloc : MonoBehaviour {
     private BoxCollider2D collider;
     private bool isLaunched = false;
     private Vector2 position;
+    private bool released = false;
 }
