@@ -3,9 +3,13 @@ using System.Collections;
 
 public class DaddyBloc : MonoBehaviour {
 
-	// Use this for initialization
+    void Awake()
+    {
+        collider = GetComponent<BoxCollider2D>();
+    }
+
 	void Start () {
-        GetComponent<Collider2D>().isTrigger = true;
+        collider.isTrigger = true;
         foreach(Collider2D col in GetComponentsInChildren<Collider2D>())
             col.isTrigger = true;
         launchLenght = Mathf.Abs(transform.position.x) * 2f;
@@ -39,7 +43,7 @@ public class DaddyBloc : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Destroy(gameObject.GetComponent<Collider2D>());
+        Destroy(collider);
         Destroy(gameObject.GetComponent<Rigidbody2D>());
         foreach (Bloc bloc in transform.GetComponentsInChildren<Bloc>())
         {
@@ -52,7 +56,17 @@ public class DaddyBloc : MonoBehaviour {
     public void stopBloc()
     {
         StopCoroutine("launch");
-        GetComponent<BoxCollider2D>().isTrigger = false;
+        collider.isTrigger = false;
+        RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position, collider.size, 0, Vector2.down);
+        foreach(RaycastHit2D hit in hits)
+        {
+            if(!hit.transform.GetComponent<DaddyBloc>())
+            {
+                transform.position = new Vector3(transform.position.x, hit.point.y + collider.size.y / 2.0f + teleportHeight, 0.0f);
+                GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                break;
+            }
+        }
     }
 
     private void spawnPrefabGround()
@@ -98,6 +112,9 @@ public class DaddyBloc : MonoBehaviour {
     private float heightVariance;
     [SerializeField]
     private bool spawnOnGround = false;
+    [SerializeField]
+    private float teleportHeight = 1.0f;
 
+    private BoxCollider2D collider;
     private bool isLaunched = false;
 }

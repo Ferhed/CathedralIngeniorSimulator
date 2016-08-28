@@ -4,8 +4,11 @@ using System.Collections.Generic;
 
 public class Bloc : MonoBehaviour
 {
+    public bool IsActivated { get; private set; }
+
     void Awake()
     {
+        IsActivated = false;
 
         foreach(Transform tr in transform.parent.GetComponentsInChildren<Transform>())
         {
@@ -30,16 +33,16 @@ public class Bloc : MonoBehaviour
         transform.parent = Cathedral.Instance.transform;
         rigidBody = gameObject.AddComponent<Rigidbody2D>();
         collider = gameObject.AddComponent<BoxCollider2D>();
-        collider.size = Vector2.one / 2;
+        collider.size = Vector2.one * 19.0f;
 
         CheckForDestroyOnBot();
 
-        var gap = collider.size.x / 4.0f;
-        var ray_left = transform.position + Vector3.left * gap * 0.9f - Vector3.up * gap * 1.1f;
-        var ray_right = transform.position + Vector3.right * gap * 0.9f - Vector3.up * gap * 1.1f;
+        var gap = collider.size.x / 2.0f;
+        var ray_left = transform.position + Vector3.left * gap * 0.9f - Vector3.up * gap * 0.9f;
+        var ray_right = transform.position + Vector3.right * gap * 0.9f - Vector3.up * gap * 0.9f;
         
-        RaycastHit2D[] hit_left = Physics2D.RaycastAll(ray_left, Vector3.down, 0.1f);
-        RaycastHit2D[] hit_right = Physics2D.RaycastAll(ray_right, Vector3.down, 0.1f);
+        RaycastHit2D[] hit_left = Physics2D.RaycastAll(ray_left, Vector3.down, 10.0f);
+        RaycastHit2D[] hit_right = Physics2D.RaycastAll(ray_right, Vector3.down, 10.0f);
         
         if (hit_left.Length > 0 ||hit_right.Length > 0 )
         {
@@ -53,20 +56,48 @@ public class Bloc : MonoBehaviour
 
     public IEnumerator ActivePhysics()
     {
+        IsActivated = true;
+        var sprite = GetComponent<SpriteRenderer>();
+        if (sprite)
+        {
+            sprite.color = Color.red;
+        }
         yield return new WaitForEndOfFrame();
 
         rigidBody.constraints = RigidbodyConstraints2D.None;
+        
+        var gap = collider.size.x / 2.0f;
+        var ray_left = transform.position + Vector3.left * gap * 0.9f + Vector3.up * gap * 0.9f;
+        var ray_right = transform.position + Vector3.right * gap * 0.9f + Vector3.up * gap * 0.9f;
 
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector3.up, 0.2f);
-        if(hits.Length > 0)
+        RaycastHit2D[] hit_left = Physics2D.RaycastAll(ray_left, Vector3.up, 10.0f);
+        RaycastHit2D[] hit_right = Physics2D.RaycastAll(ray_right, Vector3.up, 10.0f);
+        
+        if(hit_left.Length > 0)
         {
-            foreach(RaycastHit2D hit in hits)
+            foreach(RaycastHit2D hit in hit_left)
             {
-                if(hit.collider.tag == "Bloc"
-                    && hit.transform != transform
-                    )
+                if(hit.transform != transform)
                 {
-                    StartCoroutine(hit.transform.GetComponent<Bloc>().ActivePhysics());
+                    var bloc = hit.transform.GetComponent<Bloc>();
+                    if (!bloc.IsActivated)
+                    {
+                        StartCoroutine(bloc.ActivePhysics());
+                    }
+                }
+            }
+        }
+        if (hit_right.Length > 0)
+        {
+            foreach (RaycastHit2D hit in hit_right)
+            {
+                if (hit.transform != transform)
+                {
+                    var bloc = hit.transform.GetComponent<Bloc>();
+                    if (!bloc.IsActivated)
+                    {
+                        StartCoroutine(bloc.ActivePhysics());
+                    }
                 }
             }
         }
