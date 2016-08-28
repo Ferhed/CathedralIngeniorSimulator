@@ -11,6 +11,7 @@ public class DaddyBloc : MonoBehaviour {
     }
 
     public int pelerinToSpawn;
+    public bool released = false;
 
     void Start () {
         collider.isTrigger = true;
@@ -182,5 +183,4 @@ public class DaddyBloc : MonoBehaviour {
     private BoxCollider2D collider;
     private bool isLaunched = false;
     private Vector2 position;
-    private bool released = false;
 }

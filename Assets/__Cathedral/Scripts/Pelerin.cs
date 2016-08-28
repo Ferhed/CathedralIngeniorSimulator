@@ -3,21 +3,10 @@ using System.Collections;
 
 public class Pelerin : MonoBehaviour {
 
-	// Use this for initialization
-	void Start ()
+	public void OnTriggerEnter2D(Collider2D col)
     {
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-	
-	}
-
-    public void OnTriggerEnter2D(Collider2D col)
-    {
-        if(col.transform.tag == "Bloc")
+        Debug.Log("AIE trigger");
+        if(col.transform.tag == "Bloc" || (col.transform.tag == "DaddyBloc" && col.GetComponent<DaddyBloc>().released))
         {
             Death();
         }
@@ -25,7 +14,8 @@ public class Pelerin : MonoBehaviour {
 
     private void Death()
     {
-        Instantiate(deathMark, transform.position, Quaternion.identity);
+        // blood FX
+        //Instantiate(deathMark, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
 
