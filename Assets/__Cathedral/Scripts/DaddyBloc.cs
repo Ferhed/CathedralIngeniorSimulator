@@ -31,6 +31,9 @@ public class DaddyBloc : MonoBehaviour {
             position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             position.y = Mathf.Max(position.y, Cathedral.Instance.MaxHeight + gapAboveTheMaxHeight);
             transform.position = Vector2.Lerp(transform.position, position, speedToFollowMouse);
+            Vector3 tmp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            tmp.z = 0;
+            ghost.transform.position = tmp;
         }
         transform.Rotate(transform.forward, rotationSpeed * Time.fixedDeltaTime);
     }
@@ -80,6 +83,7 @@ public class DaddyBloc : MonoBehaviour {
         StopCoroutine("launch");
         collider.isTrigger = false;
         RotateBlock();
+        ghost = Instantiate(ghostPrefab) as GameObject;
         IsMovableByMouse = true;
     }
 
@@ -87,6 +91,7 @@ public class DaddyBloc : MonoBehaviour {
     {
         released = true;
         IsMovableByMouse = false;
+        Destroy(ghost);
         //RotateBlock();
         GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
         RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position, collider.size, 0, Vector2.down);
@@ -181,8 +186,13 @@ public class DaddyBloc : MonoBehaviour {
     private float gapAboveTheMaxHeight = 10.0f;
     [SerializeField]
     private float rotationSpeed = 150.0f;
+    [SerializeField]
+    private float ghostAlpha = 0.5f;
+    [SerializeField]
+    private GameObject ghostPrefab;
 
     private BoxCollider2D collider;
     private bool isLaunched = false;
     private Vector2 position;
+    private GameObject ghost;
 }
