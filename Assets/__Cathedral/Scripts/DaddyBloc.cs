@@ -3,6 +3,8 @@ using System.Collections;
 
 public class DaddyBloc : MonoBehaviour {
 
+    public bool IsMovableByMouse { get; private set; }
+
     void Awake()
     {
         collider = GetComponent<BoxCollider2D>();
@@ -15,6 +17,16 @@ public class DaddyBloc : MonoBehaviour {
         launchLenght = Mathf.Abs(transform.position.x) * 2f;
         launchHeight = (Random.Range(0f, heightVariance)+1)*launchHeight;
 	}
+
+    void FixedUpdate()
+    {
+        if(IsMovableByMouse)
+        {
+            position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            position.y = Mathf.Max(position.y, Cathedral.Instance.MaxHeight + gapAboveTheMaxHeight);
+            transform.position = Vector2.Lerp(transform.position, position, speedToFollowMouse);
+        }
+    }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
@@ -37,7 +49,6 @@ public class DaddyBloc : MonoBehaviour {
         {
             if (isLaunched)
                 isLaunched = false;
-            
         }
     }
 
@@ -49,7 +60,6 @@ public class DaddyBloc : MonoBehaviour {
         {
             bloc.DetachBloc();
         }
-        Debug.Log("DestroyTrigger");
         Destroy(gameObject);
     }
 
@@ -57,10 +67,17 @@ public class DaddyBloc : MonoBehaviour {
     {
         StopCoroutine("launch");
         collider.isTrigger = false;
+        IsMovableByMouse = true;
+    }
+
+    public void GoPosition()
+    {
+        IsMovableByMouse = false;
+        GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
         RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position, collider.size, 0, Vector2.down);
-        foreach(RaycastHit2D hit in hits)
+        foreach (RaycastHit2D hit in hits)
         {
-            if(!hit.transform.GetComponent<DaddyBloc>())
+            if (!hit.transform.GetComponent<DaddyBloc>())
             {
                 transform.position = new Vector3(transform.position.x, hit.point.y + collider.size.y / 2.0f + teleportHeight, 0.0f);
                 GetComponent<Rigidbody2D>().velocity = Vector2.zero;
@@ -114,7 +131,12 @@ public class DaddyBloc : MonoBehaviour {
     private bool spawnOnGround = false;
     [SerializeField]
     private float teleportHeight = 1.0f;
+    [SerializeField]
+    private float speedToFollowMouse = 10.0f;
+    [SerializeField]
+    private float gapAboveTheMaxHeight = 10.0f;
 
     private BoxCollider2D collider;
     private bool isLaunched = false;
+    private Vector2 position;
 }
