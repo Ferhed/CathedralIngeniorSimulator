@@ -50,7 +50,7 @@ public class Bloc : MonoBehaviour
 
         if(transform.position.y >Cathedral.Instance.MaxBuildHeight)
         {
-            DestroyMe();
+            StartCoroutine(ActivePhysics());
             return;
         }
 
