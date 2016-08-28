@@ -48,6 +48,12 @@ public class Bloc : MonoBehaviour
 
         CheckForDestroyOnBot();
 
+        if(transform.position.y >Cathedral.Instance.MaxBuildHeight)
+        {
+            DestroyMe();
+            return;
+        }
+
         var gap = collider.size.x / 2.0f;
         var ray_left = transform.position + Vector3.left * gap * 0.9f - Vector3.up * gap * 0.9f;
         var ray_right = transform.position + Vector3.right * gap * 0.9f - Vector3.up * gap * 0.9f;
@@ -68,6 +74,12 @@ public class Bloc : MonoBehaviour
 
     public IEnumerator ActivePhysics()
     {
+        if (rigidBody == null)
+        {
+            rigidBody = GetComponent<Rigidbody2D>();
+            collider = GetComponent<BoxCollider2D>();
+        }
+
         IsActivated = true;
         var sprite = GetComponent<SpriteRenderer>();
         if (sprite)
@@ -122,7 +134,7 @@ public class Bloc : MonoBehaviour
     {
         Destroy(GetComponent<SpriteRenderer>());
         yield return new WaitForSeconds(timeToDestruct);
-
+        
         StartCoroutine(ActivePhysics());
         
         yield return new WaitForSeconds(0.1f);
