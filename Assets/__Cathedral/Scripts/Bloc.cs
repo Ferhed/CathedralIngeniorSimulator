@@ -39,7 +39,7 @@ public class Bloc : MonoBehaviour
         }
     }
 
-    public void DetachBloc()
+    public void DetachBloc(bool destroy_now)
     {
         transform.parent = Cathedral.Instance.transform;
         rigidBody = gameObject.AddComponent<Rigidbody2D>();
@@ -49,6 +49,12 @@ public class Bloc : MonoBehaviour
         CheckForDestroyOnBot();
 
         if(transform.position.y >Cathedral.Instance.MaxBuildHeight)
+        {
+            StartCoroutine(ActivePhysics());
+            return;
+        }
+
+        if(destroy_now)
         {
             StartCoroutine(ActivePhysics());
             return;

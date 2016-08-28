@@ -64,13 +64,48 @@ public class DaddyBloc : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        var y = new Vector3(0.0f,collider.size.y / 2.0f);
+        var x = new Vector3( collider.size.x / 2.0f,0.0f);
+        bool CanSurvive= false;
+
+        Vector2[] coins =
+        {
+            transform.position + x + y ,
+            transform.position + x - y ,
+            transform.position - x + y ,
+            transform.position - x - y ,
+        };
+        foreach(Vector2 coin in coins)
+        {
+            if(Cathedral.Instance.GuideCollider.bounds.Contains(coin))
+            {
+                CanSurvive = true;
+            }
+        }
+
+        if (!CanSurvive)
+        {
+            Destroy(collider);
+            Destroy(gameObject.GetComponent<Rigidbody2D>());
+            if (collision.transform.tag == "Zone")
+                Debug.Log("I'm in !");
+            foreach (Bloc bloc in transform.GetComponentsInChildren<Bloc>())
+            {
+                bloc.DetachBloc(true);
+            }
+            Destroy(gameObject);
+
+            return;
+        }
+        
+
         Destroy(collider);
         Destroy(gameObject.GetComponent<Rigidbody2D>());
         if (collision.transform.tag == "Zone")
             Debug.Log("I'm in !");
         foreach (Bloc bloc in transform.GetComponentsInChildren<Bloc>())
         {
-            bloc.DetachBloc();
+            bloc.DetachBloc(false);
         }
         Destroy(gameObject);
     }
