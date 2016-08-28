@@ -72,7 +72,7 @@ public class Bloc : MonoBehaviour
         var sprite = GetComponent<SpriteRenderer>();
         if (sprite)
         {
-            sprite.color = Color.red;
+            sprite.color = brokenColor;
         }
         yield return new WaitForEndOfFrame();
 
@@ -195,6 +195,8 @@ public class Bloc : MonoBehaviour
     private bool leftWeakness = false;
     [SerializeField]
     private bool rightWeakness = false;
+    [SerializeField]
+    private Color brokenColor  = Color.red;
 
     private List<Transform> brothers = new List<Transform>();
     private Rigidbody2D rigidBody;

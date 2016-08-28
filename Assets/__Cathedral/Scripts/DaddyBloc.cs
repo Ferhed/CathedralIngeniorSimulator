@@ -17,7 +17,9 @@ public class DaddyBloc : MonoBehaviour {
         launchLenght = Mathf.Abs(transform.position.x) * 2f;
         launchHeight = Cathedral.Instance.MaxHeight + gapAboveTheMaxHeight;
         launchHeight += (Random.Range(-heightVariance, heightVariance))*launchHeight;
-	}
+        launchDuration += (Random.Range(-0.5f, 0.5f)) * launchDuration;
+        rotationSpeed += (Random.Range(-0.2f, 0.2f)) * rotationSpeed;
+    }
 
     void FixedUpdate()
     {
@@ -27,6 +29,7 @@ public class DaddyBloc : MonoBehaviour {
             position.y = Mathf.Max(position.y, Cathedral.Instance.MaxHeight + gapAboveTheMaxHeight);
             transform.position = Vector2.Lerp(transform.position, position, speedToFollowMouse);
         }
+        transform.Rotate(transform.forward, rotationSpeed * Time.fixedDeltaTime);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -74,6 +77,7 @@ public class DaddyBloc : MonoBehaviour {
     public void GoPosition()
     {
         IsMovableByMouse = false;
+        RotateBlock();
         GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
         RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position, collider.size, 0, Vector2.down);
         foreach (RaycastHit2D hit in hits)
@@ -119,6 +123,27 @@ public class DaddyBloc : MonoBehaviour {
         }
     }
 
+    private void RotateBlock()
+    {
+        rotationSpeed = 0.0f;
+        if (Vector3.Dot(Vector3.up, transform.up) > 0.5f)
+        {
+            transform.rotation = Quaternion.Euler(0.0f,0.0f,0.0f);
+        }
+        else if (Vector3.Dot(Vector3.up, -transform.up) > 0.5f)
+        {
+            transform.rotation = Quaternion.Euler(0.0f, 0.0f, 180.0f);
+        }
+        else if (Vector3.Dot(Vector3.up, transform.right) > 0.5f)
+        {
+            transform.rotation = Quaternion.Euler(0.0f, 0.0f, 90.0f);
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0.0f, 0.0f, 270.0f);
+        }
+    }
+
     [Header("Tweak")]
     [SerializeField]
     private float launchDuration;
@@ -136,6 +161,8 @@ public class DaddyBloc : MonoBehaviour {
     private float speedToFollowMouse = 10.0f;
     [SerializeField]
     private float gapAboveTheMaxHeight = 10.0f;
+    [SerializeField]
+    private float rotationSpeed = 1.0f;
 
     private BoxCollider2D collider;
     private bool isLaunched = false;
