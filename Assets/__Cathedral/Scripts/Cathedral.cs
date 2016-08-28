@@ -13,11 +13,9 @@ public class Cathedral : MonoBehaviour
     void Start()
     {
         GameObject ground = GameObject.FindGameObjectWithTag("Ground");
-        Debug.Log("Scale : " + ground.transform.localScale.y);
-        Debug.Log("Position : " + ground.transform.position.y);
-        float posY = ground.transform.position.y + (ground.transform.localScale.y * blocSize / 2) + (((cathedraleHeight * blocSize) / 2f) * blocSize);
+        float posY = ground.transform.position.y + (ground.transform.localScale.y * blocSize / 2f) + (((cathedraleHeight) / 2f)*blocSize);
         GameObject guideInstance = Instantiate(guide, new Vector2(0f, posY), Quaternion.identity) as GameObject;
-        guideInstance.transform.localScale = new Vector2(cathedraleWidth * blocSize, cathedraleHeight * blocSize);
+        guideInstance.transform.localScale = new Vector2(cathedraleWidth, cathedraleHeight);
     }
 
     // Update is called once per frame
@@ -47,14 +45,16 @@ public class Cathedral : MonoBehaviour
     public float EvaluateCathedrale()
     {
         GameObject ground = GameObject.FindGameObjectWithTag("Ground");
-        float posY = ground.transform.position.y + (ground.transform.localScale.y * blocSize / 2) + (((cathedraleHeight * blocSize) / 2f) * blocSize);
+        float posY = ground.transform.position.y + (ground.transform.localScale.y * blocSize / 2f) + ((cathedraleHeight * blocSize) / 2f);
+        RaycastHit2D[] cols = Physics2D.BoxCastAll(new Vector2(0f, posY), new Vector2(cathedraleWidth * blocSize, cathedraleHeight * blocSize) , 0.0f, Vector2.zero);
         float surface = cathedraleWidth * cathedraleHeight;
-        RaycastHit2D[] cols = Physics2D.BoxCastAll(new Vector2(0f, posY), new Vector2((cathedraleWidth * blocSize)/2f, (cathedraleHeight * blocSize)/2f) , 0.0f, Vector2.zero);
         int count = 0;
         foreach (RaycastHit2D hit in cols)
         {
             if (hit.transform.tag == "Bloc")
+            {
                 ++count;
+            }
         }
         return count / surface;
     }
@@ -63,8 +63,8 @@ public class Cathedral : MonoBehaviour
     {
         Gizmos.color = Color.red;
         GameObject ground = GameObject.FindGameObjectWithTag("Ground");
-        float posY = ground.transform.position.y + (ground.transform.localScale.y * blocSize / 2) + (((cathedraleHeight * blocSize) / 2f) * blocSize);
-        Gizmos.DrawCube(new Vector3(0f, posY, 0f), new Vector3((cathedraleWidth * blocSize)/2f, (cathedraleHeight * blocSize) / 2f, 0f));
+        float posY = ground.transform.position.y + (ground.transform.localScale.y * blocSize / 2f) + ((cathedraleHeight * blocSize) / 2f);
+        Gizmos.DrawCube(new Vector3(0f, posY, 0f), new Vector3(cathedraleWidth * blocSize, cathedraleHeight * blocSize, 0f));
     }
 
     [SerializeField]

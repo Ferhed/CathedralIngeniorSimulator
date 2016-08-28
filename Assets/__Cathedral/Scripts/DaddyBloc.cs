@@ -25,7 +25,6 @@ public class DaddyBloc : MonoBehaviour {
             else if(isLaunched)
             {
                 // FX
-                Debug.Log("DestroyTrigger");
                 Destroy(gameObject);
             }
         }
@@ -35,8 +34,8 @@ public class DaddyBloc : MonoBehaviour {
     {
         if (collision.transform.tag.Equals("Ground"))
         {
-            if (isLaunched)
-                isLaunched = false;
+            if (!isLaunched)
+                isLaunched = true;
             
         }
     }
