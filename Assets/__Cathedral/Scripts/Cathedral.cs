@@ -4,10 +4,12 @@ using System.Collections;
 public class Cathedral : MonoBehaviour
 {
     public static Cathedral Instance { get; private set; }
+    public float MaxHeight { get; private set; }
 
     void Awake()
     {
         Instance = this;
+        MaxHeight = 0.0f;
     }
     // Use this for initialization
     void Start()
@@ -42,6 +44,15 @@ public class Cathedral : MonoBehaviour
             Debug.Log("You lose, noob ;)");
     }
 
+    public void SubmitMyHeight(float height)
+    {
+        if (height > MaxHeight)
+        {
+            MaxHeight = height;
+            Debug.Log(MaxHeight);
+        }
+    }
+
     public float EvaluateCathedrale()
     {
         GameObject ground = GameObject.FindGameObjectWithTag("Ground");
@@ -69,19 +80,14 @@ public class Cathedral : MonoBehaviour
 
     [SerializeField]
     private DaddyBloc daddyPrefab;
-
     [SerializeField]
     private float cathedraleWidth;
-
     [SerializeField]
     private float cathedraleHeight;
-
     [SerializeField]
     private float scoreAcceptance;
-
     [SerializeField]
     private GameObject guide;
-
     [SerializeField]
     private float blocSize;
 
