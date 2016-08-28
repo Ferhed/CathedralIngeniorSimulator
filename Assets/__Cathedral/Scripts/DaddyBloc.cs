@@ -78,6 +78,7 @@ public class DaddyBloc : MonoBehaviour {
     {
         StopCoroutine("launch");
         collider.isTrigger = false;
+        RotateBlock();
         IsMovableByMouse = true;
     }
 
@@ -85,7 +86,7 @@ public class DaddyBloc : MonoBehaviour {
     {
         released = true;
         IsMovableByMouse = false;
-        RotateBlock();
+        //RotateBlock();
         GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
         RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position, collider.size, 0, Vector2.down);
         foreach (RaycastHit2D hit in hits)
@@ -141,7 +142,8 @@ public class DaddyBloc : MonoBehaviour {
     private void RotateBlock()
     {
         rotationSpeed = 0.0f;
-        if (Vector3.Dot(Vector3.up, transform.up) > 0.5f)
+        transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+        /*if (Vector3.Dot(Vector3.up, transform.up) > 0.5f)
         {
             transform.rotation = Quaternion.Euler(0.0f,0.0f,0.0f);
         }
@@ -156,7 +158,7 @@ public class DaddyBloc : MonoBehaviour {
         else
         {
             transform.rotation = Quaternion.Euler(0.0f, 0.0f, 270.0f);
-        }
+        }*/
     }
 
     [Header("Tweak")]
