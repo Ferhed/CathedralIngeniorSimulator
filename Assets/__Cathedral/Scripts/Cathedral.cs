@@ -49,7 +49,7 @@ public class Cathedral : MonoBehaviour
         if (height > MaxHeight)
         {
             MaxHeight = height;
-            Debug.Log(MaxHeight);
+            CameraScript.Instance.ChangeDistance();
         }
     }
 
