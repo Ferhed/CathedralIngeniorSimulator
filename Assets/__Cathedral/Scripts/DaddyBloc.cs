@@ -8,7 +8,9 @@ public class DaddyBloc : MonoBehaviour {
         collider = GetComponent<BoxCollider2D>();
     }
 
-	void Start () {
+    public int pelerinToSpawn;
+
+    void Start () {
         collider.isTrigger = true;
         foreach(Collider2D col in GetComponentsInChildren<Collider2D>())
             col.isTrigger = true;
@@ -36,6 +38,10 @@ public class DaddyBloc : MonoBehaviour {
         {
             if (!isLaunched)
                 isLaunched = true;
+        }
+        if(collision.transform.tag.Equals("Zone"))
+        {
+            Cathedral.Instance.SpawnPelerin(pelerinToSpawn);
         }
     }
 

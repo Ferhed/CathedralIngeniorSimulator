@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Cathedral : MonoBehaviour
 {
@@ -50,13 +51,16 @@ public class Cathedral : MonoBehaviour
         for(int i = number;  number>0; number--)
         {
             float posX;
-            float side = Random.Range(-1, 1);
-            if (side > 0)
-                posX = Random.Range(cathedraleWidth * blocSize, maxPelerinX);
+            int side = Random.Range(0, 100);
+            if (side > 50)
+                posX = Random.Range(cathedraleWidth/2f * blocSize, maxPelerinX);
             else
-                posX = Random.Range(minPelerinX, -cathedraleWidth * blocSize);
+                posX = Random.Range(minPelerinX, -cathedraleWidth/2f * blocSize);
             // spawn with a deltaX and then move toward his destination
-            Instantiate(pelerinPrefab, new Vector2(posX, pelerinPrefab.transform.position.y), Quaternion.identity);
+            GameObject pel = pelerinPrefabs[Random.Range(0, pelerinPrefabs.Count)];
+            GameObject tmp = Instantiate(pel, new Vector2(posX, pel.transform.position.y), Quaternion.identity) as GameObject;
+            if (side > 50)
+                tmp.transform.localScale = new Vector3(-tmp.transform.localScale.x, tmp.transform.localScale.y, tmp.transform.localScale.z);
             // probably launch a coroutine with fade and movement
         }
     }
@@ -118,7 +122,7 @@ public class Cathedral : MonoBehaviour
     [SerializeField]
     private float blocSize;
     [SerializeField]
-    private GameObject pelerinPrefab;
+    private List<GameObject> pelerinPrefabs = new List<GameObject>();
 
     private float completion;
     private float minPelerinX;
