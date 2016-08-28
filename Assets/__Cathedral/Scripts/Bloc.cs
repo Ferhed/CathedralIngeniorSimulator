@@ -89,22 +89,18 @@ public class Bloc : MonoBehaviour
     {
         if(Vector3.Dot(Vector3.up,transform.up)> 0.5f)
         {
-            Debug.Log("top");
             return topWeakness;
         }
         else if(Vector3.Dot(Vector3.up, -transform.up) > 0.5f)
         {
-            Debug.Log("bot");
             return botWeakness;
         }
         else if (Vector3.Dot(Vector3.up, transform.right) > 0.5f)
         {
-            Debug.Log("right");
             return rightWeakness;
         }
         else
         {
-            Debug.Log("left");
             return leftWeakness;
         }
     }
