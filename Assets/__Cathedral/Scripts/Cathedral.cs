@@ -13,6 +13,7 @@ public class Cathedral : MonoBehaviour
     {
         Instance = this;
         MaxHeight = 0.0f;
+        Invoke("spawnKamikaze", Random.RandomRange(2f, 5f));
     }
     // Use this for initialization
     void Start()
@@ -45,6 +46,17 @@ public class Cathedral : MonoBehaviour
         }
         minPelerinX = Camera.main.ScreenToWorldPoint(new Vector3(0f, 0f, 0f)).x;
         maxPelerinX = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0f, 0f)).x;
+    }
+
+    void spawnKamikaze()
+    {
+
+        int side = Random.Range(0, 2);
+        if (side == 0)
+            Instantiate(kamikazePrefab, new Vector2(minPelerinX-50f, Mathf.Max(50f, Random.Range(50f, MaxHeight))), Quaternion.identity);
+        else
+            Instantiate(kamikazePrefab, new Vector2(maxPelerinX+50f, Mathf.Max(50f, Random.Range(50f, MaxHeight))), Quaternion.identity);
+        Invoke("spawnKamikaze", Random.RandomRange(2f, 5f));
     }
 
     public float getCompletion()
@@ -130,7 +142,10 @@ public class Cathedral : MonoBehaviour
     [SerializeField]
     private List<GameObject> pelerinPrefabs = new List<GameObject>();
     [SerializeField]
-    private float maxBuildHeight= 600.0f;
+    private float maxBuildHeight = 600.0f;
+    [SerializeField]
+    private GameObject kamikazePrefab;
+
     private float completion;
     private float minPelerinX;
     private float maxPelerinX;
