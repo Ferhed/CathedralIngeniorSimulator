@@ -3,6 +3,8 @@ using System.Collections;
 
 public class DaddyBloc : MonoBehaviour {
 
+    public bool IsMovableByMouse { get; private set; }
+
     void Awake()
     {
         collider = GetComponent<BoxCollider2D>();
@@ -13,8 +15,22 @@ public class DaddyBloc : MonoBehaviour {
         foreach(Collider2D col in GetComponentsInChildren<Collider2D>())
             col.isTrigger = true;
         launchLenght = Mathf.Abs(transform.position.x) * 2f;
-        launchHeight = (Random.Range(0f, heightVariance)+1)*launchHeight;
-	}
+        launchHeight = Cathedral.Instance.MaxHeight + gapAboveTheMaxHeight;
+        launchHeight += (Random.Range(-heightVariance, heightVariance))*launchHeight;
+        launchDuration += (Random.Range(-0.5f, 0.5f)) * launchDuration;
+        rotationSpeed += (Random.Range(-0.2f, 0.2f)) * rotationSpeed;
+    }
+
+    void FixedUpdate()
+    {
+        if(IsMovableByMouse)
+        {
+            position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            position.y = Mathf.Max(position.y, Cathedral.Instance.MaxHeight + gapAboveTheMaxHeight);
+            transform.position = Vector2.Lerp(transform.position, position, speedToFollowMouse);
+        }
+        transform.Rotate(transform.forward, rotationSpeed * Time.fixedDeltaTime);
+    }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
@@ -22,11 +38,21 @@ public class DaddyBloc : MonoBehaviour {
         {
             if(spawnOnGround)
                 spawnPrefabGround();
-            else 
+            else if(isLaunched)
             {
                 // FX
                 Destroy(gameObject);
             }
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.transform.tag.Equals("Ground"))
+        {
+            if (!isLaunched)
+                isLaunched = true;
+            
         }
     }
 
@@ -45,21 +71,24 @@ public class DaddyBloc : MonoBehaviour {
     {
         StopCoroutine("launch");
         collider.isTrigger = false;
+        IsMovableByMouse = true;
+    }
+
+    public void GoPosition()
+    {
+        IsMovableByMouse = false;
+        RotateBlock();
+        GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
         RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position, collider.size, 0, Vector2.down);
-        foreach(RaycastHit2D hit in hits)
+        foreach (RaycastHit2D hit in hits)
         {
-            if(!hit.transform.GetComponent<DaddyBloc>())
+            if (!hit.transform.GetComponent<DaddyBloc>())
             {
                 transform.position = new Vector3(transform.position.x, hit.point.y + collider.size.y / 2.0f + teleportHeight, 0.0f);
                 GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                 break;
             }
         }
-    }
-
-    public void OnMouseDown()
-    {
-        stopBloc();
     }
 
     private void spawnPrefabGround()
@@ -94,6 +123,27 @@ public class DaddyBloc : MonoBehaviour {
         }
     }
 
+    private void RotateBlock()
+    {
+        rotationSpeed = 0.0f;
+        if (Vector3.Dot(Vector3.up, transform.up) > 0.5f)
+        {
+            transform.rotation = Quaternion.Euler(0.0f,0.0f,0.0f);
+        }
+        else if (Vector3.Dot(Vector3.up, -transform.up) > 0.5f)
+        {
+            transform.rotation = Quaternion.Euler(0.0f, 0.0f, 180.0f);
+        }
+        else if (Vector3.Dot(Vector3.up, transform.right) > 0.5f)
+        {
+            transform.rotation = Quaternion.Euler(0.0f, 0.0f, 90.0f);
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0.0f, 0.0f, 270.0f);
+        }
+    }
+
     [Header("Tweak")]
     [SerializeField]
     private float launchDuration;
@@ -107,6 +157,14 @@ public class DaddyBloc : MonoBehaviour {
     private bool spawnOnGround = false;
     [SerializeField]
     private float teleportHeight = 1.0f;
+    [SerializeField]
+    private float speedToFollowMouse = 10.0f;
+    [SerializeField]
+    private float gapAboveTheMaxHeight = 10.0f;
+    [SerializeField]
+    private float rotationSpeed = 1.0f;
 
     private BoxCollider2D collider;
+    private bool isLaunched = false;
+    private Vector2 position;
 }

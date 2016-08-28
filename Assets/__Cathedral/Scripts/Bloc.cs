@@ -28,6 +28,17 @@ public class Bloc : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (IsActivated)
+        {
+            if (collision.transform.tag.Equals("Ground"))
+            {
+               StartCoroutine(DestroyMe());
+            }
+        }
+    }
+
     public void DetachBloc()
     {
         transform.parent = Cathedral.Instance.transform;
@@ -46,7 +57,8 @@ public class Bloc : MonoBehaviour
         
         if (hit_left.Length > 0 ||hit_right.Length > 0 )
         {
-           rigidBody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+            rigidBody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+            Invoke("SendMyHeight", 1.0f);
         }
         else
         {
@@ -60,11 +72,12 @@ public class Bloc : MonoBehaviour
         var sprite = GetComponent<SpriteRenderer>();
         if (sprite)
         {
-            sprite.color = Color.red;
+            sprite.color = brokenColor;
         }
         yield return new WaitForEndOfFrame();
 
         rigidBody.constraints = RigidbodyConstraints2D.None;
+        AllWeakness();
         
         var gap = collider.size.x / 2.0f;
         var ray_left = transform.position + Vector3.left * gap * 0.9f + Vector3.up * gap * 0.9f;
@@ -80,7 +93,9 @@ public class Bloc : MonoBehaviour
                 if(hit.transform != transform)
                 {
                     var bloc = hit.transform.GetComponent<Bloc>();
-                    if (!bloc.IsActivated)
+                    if (bloc != null
+                        &&!bloc.IsActivated
+                        )
                     {
                         StartCoroutine(bloc.ActivePhysics());
                     }
@@ -105,7 +120,6 @@ public class Bloc : MonoBehaviour
 
     public IEnumerator DestroyMe()
     {
-        IsWeakOnTop();
         Destroy(GetComponent<SpriteRenderer>());
         yield return new WaitForSeconds(timeToDestruct);
 
@@ -136,9 +150,22 @@ public class Bloc : MonoBehaviour
         }
     }
 
+    private void AllWeakness()
+    {
+        botWeakness = true;
+        leftWeakness = true;
+        rightWeakness = true;
+        topWeakness = true;
+    }
+
+    private void SendMyHeight()
+    {
+        Cathedral.Instance.SubmitMyHeight(transform.position.y + collider.size.y / 2.0f );
+    }
+
     private void CheckForDestroyOnBot()
     {
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector3.down, 0.2f);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector3.down, 20.0f);
 
         foreach (RaycastHit2D hit in hits)
         {
@@ -168,6 +195,8 @@ public class Bloc : MonoBehaviour
     private bool leftWeakness = false;
     [SerializeField]
     private bool rightWeakness = false;
+    [SerializeField]
+    private Color brokenColor  = Color.red;
 
     private List<Transform> brothers = new List<Transform>();
     private Rigidbody2D rigidBody;
