@@ -126,10 +126,7 @@ public class Cathedral : MonoBehaviour
     private List<GameObject> pelerinPrefabs = new List<GameObject>();
     [SerializeField]
     private float maxBuildHeight= 600.0f;
-
     private float completion;
     private float minPelerinX;
     private float maxPelerinX;
-
-
 }

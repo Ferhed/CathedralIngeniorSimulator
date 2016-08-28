@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Pelerin : MonoBehaviour {
 
@@ -15,10 +16,11 @@ public class Pelerin : MonoBehaviour {
     private void Death()
     {
         // blood FX
-        //Instantiate(deathMark, transform.position, Quaternion.identity);
+        GameObject tmp = deathMarks[Random.Range(0, deathMarks.Count)];
+        Instantiate(tmp, new Vector2(transform.position.x, tmp.transform.position.y), Quaternion.identity);
         Destroy(gameObject);
     }
 
     [SerializeField]
-    private GameObject deathMark;
+    private List<GameObject> deathMarks = new List<GameObject>();
 }
