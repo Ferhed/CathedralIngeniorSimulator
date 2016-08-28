@@ -4,17 +4,17 @@ using System.Collections;
 public class Cathedral : MonoBehaviour
 {
     public static Cathedral Instance { get; private set; }
+    public float MaxHeight { get; private set; }
 
     void Awake()
     {
         Instance = this;
+        MaxHeight = 0.0f;
     }
     // Use this for initialization
     void Start()
     {
         GameObject ground = GameObject.FindGameObjectWithTag("Ground");
-        Debug.Log("Scale : " + ground.transform.localScale.y);
-        Debug.Log("Position : " + ground.transform.position.y);
         float posY = ground.transform.position.y + (ground.transform.localScale.y * blocSize / 2) + (((cathedraleHeight * blocSize) / 2f) * blocSize);
         GameObject guideInstance = Instantiate(guide, new Vector2(0f, posY), Quaternion.identity) as GameObject;
         guideInstance.transform.localScale = new Vector2(cathedraleWidth * blocSize, cathedraleHeight * blocSize);
@@ -44,6 +44,15 @@ public class Cathedral : MonoBehaviour
             Debug.Log("You lose, noob ;)");
     }
 
+    public void SubmitMyHeight(float height)
+    {
+        if (height > MaxHeight)
+        {
+            MaxHeight = height;
+            Debug.Log(MaxHeight);
+        }
+    }
+
     public float EvaluateCathedrale()
     {
         GameObject ground = GameObject.FindGameObjectWithTag("Ground");
@@ -69,19 +78,14 @@ public class Cathedral : MonoBehaviour
 
     [SerializeField]
     private DaddyBloc daddyPrefab;
-
     [SerializeField]
     private float cathedraleWidth;
-
     [SerializeField]
     private float cathedraleHeight;
-
     [SerializeField]
     private float scoreAcceptance;
-
     [SerializeField]
     private GameObject guide;
-
     [SerializeField]
     private float blocSize;
 

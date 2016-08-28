@@ -57,7 +57,8 @@ public class Bloc : MonoBehaviour
         
         if (hit_left.Length > 0 ||hit_right.Length > 0 )
         {
-           rigidBody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+            rigidBody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+            Invoke("SendMyHeight", 1.0f);
         }
         else
         {
@@ -92,7 +93,9 @@ public class Bloc : MonoBehaviour
                 if(hit.transform != transform)
                 {
                     var bloc = hit.transform.GetComponent<Bloc>();
-                    if (!bloc.IsActivated)
+                    if (bloc != null
+                        &&!bloc.IsActivated
+                        )
                     {
                         StartCoroutine(bloc.ActivePhysics());
                     }
@@ -153,6 +156,11 @@ public class Bloc : MonoBehaviour
         leftWeakness = true;
         rightWeakness = true;
         topWeakness = true;
+    }
+
+    private void SendMyHeight()
+    {
+        Cathedral.Instance.SubmitMyHeight(transform.position.y + collider.size.y / 2.0f );
     }
 
     private void CheckForDestroyOnBot()
