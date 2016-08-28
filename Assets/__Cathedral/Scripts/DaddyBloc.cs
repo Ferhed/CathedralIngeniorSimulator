@@ -10,7 +10,10 @@ public class DaddyBloc : MonoBehaviour {
         collider = GetComponent<BoxCollider2D>();
     }
 
-	void Start () {
+    public int pelerinToSpawn;
+    public bool released = false;
+
+    void Start () {
         collider.isTrigger = true;
         foreach(Collider2D col in GetComponentsInChildren<Collider2D>())
             col.isTrigger = true;
@@ -28,6 +31,9 @@ public class DaddyBloc : MonoBehaviour {
             position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             position.y = Mathf.Max(position.y, Cathedral.Instance.MaxHeight + gapAboveTheMaxHeight);
             transform.position = Vector2.Lerp(transform.position, position, speedToFollowMouse);
+            Vector3 tmp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            tmp.z = 0;
+            ghost.transform.position = tmp;
         }
         transform.Rotate(transform.forward, rotationSpeed * Time.fixedDeltaTime);
     }
@@ -44,6 +50,10 @@ public class DaddyBloc : MonoBehaviour {
                 Destroy(gameObject);
             }
         }
+        if (collision.transform.tag.Equals("Zone") && released)
+        {
+            Cathedral.Instance.SpawnPelerin(pelerinToSpawn);
+        }
     }
 
     void OnTriggerExit2D(Collider2D collision)
@@ -52,17 +62,53 @@ public class DaddyBloc : MonoBehaviour {
         {
             if (!isLaunched)
                 isLaunched = true;
-            
         }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        var y = new Vector3(0.0f,collider.size.y / 2.0f);
+        var x = new Vector3( collider.size.x / 2.0f,0.0f);
+        bool CanSurvive= false;
+
+        Vector2[] coins =
+        {
+            transform.position + x + y ,
+            transform.position + x - y ,
+            transform.position - x + y ,
+            transform.position - x - y ,
+        };
+        foreach(Vector2 coin in coins)
+        {
+            if(Cathedral.Instance.GuideCollider.bounds.Contains(coin))
+            {
+                CanSurvive = true;
+            }
+        }
+
+        if (!CanSurvive)
+        {
+            Destroy(collider);
+            Destroy(gameObject.GetComponent<Rigidbody2D>());
+            if (collision.transform.tag == "Zone")
+                Debug.Log("I'm in !");
+            foreach (Bloc bloc in transform.GetComponentsInChildren<Bloc>())
+            {
+                bloc.DetachBloc(true);
+            }
+            Destroy(gameObject);
+
+            return;
+        }
+        
+
         Destroy(collider);
         Destroy(gameObject.GetComponent<Rigidbody2D>());
+        if (collision.transform.tag == "Zone")
+            Debug.Log("I'm in !");
         foreach (Bloc bloc in transform.GetComponentsInChildren<Bloc>())
         {
-            bloc.DetachBloc();
+            bloc.DetachBloc(false);
         }
         Destroy(gameObject);
     }
@@ -71,13 +117,17 @@ public class DaddyBloc : MonoBehaviour {
     {
         StopCoroutine("launch");
         collider.isTrigger = false;
+        RotateBlock();
+        ghost = Instantiate(ghostPrefab) as GameObject;
         IsMovableByMouse = true;
     }
 
     public void GoPosition()
     {
+        released = true;
         IsMovableByMouse = false;
-        RotateBlock();
+        Destroy(ghost);
+        //RotateBlock();
         GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
         RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position, collider.size, 0, Vector2.down);
         foreach (RaycastHit2D hit in hits)
@@ -89,6 +139,13 @@ public class DaddyBloc : MonoBehaviour {
                 break;
             }
         }
+        GameObject zone = GameObject.FindGameObjectWithTag("Zone");
+        if (zone.GetComponent<BoxCollider2D>().bounds.Contains(transform.position))
+        {
+            Cathedral.Instance.SpawnPelerin(pelerinToSpawn);
+            released = false;
+        }
+
     }
 
     private void spawnPrefabGround()
@@ -126,7 +183,8 @@ public class DaddyBloc : MonoBehaviour {
     private void RotateBlock()
     {
         rotationSpeed = 0.0f;
-        if (Vector3.Dot(Vector3.up, transform.up) > 0.5f)
+        transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+        /*if (Vector3.Dot(Vector3.up, transform.up) > 0.5f)
         {
             transform.rotation = Quaternion.Euler(0.0f,0.0f,0.0f);
         }
@@ -141,7 +199,7 @@ public class DaddyBloc : MonoBehaviour {
         else
         {
             transform.rotation = Quaternion.Euler(0.0f, 0.0f, 270.0f);
-        }
+        }*/
     }
 
     [Header("Tweak")]
@@ -162,9 +220,14 @@ public class DaddyBloc : MonoBehaviour {
     [SerializeField]
     private float gapAboveTheMaxHeight = 10.0f;
     [SerializeField]
-    private float rotationSpeed = 1.0f;
+    private float rotationSpeed = 150.0f;
+    [SerializeField]
+    private float ghostAlpha = 0.5f;
+    [SerializeField]
+    private GameObject ghostPrefab;
 
     private BoxCollider2D collider;
     private bool isLaunched = false;
     private Vector2 position;
+    private GameObject ghost;
 }
