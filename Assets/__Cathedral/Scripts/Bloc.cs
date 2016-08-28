@@ -68,6 +68,12 @@ public class Bloc : MonoBehaviour
 
     public IEnumerator ActivePhysics()
     {
+        if (rigidBody == null)
+        {
+            rigidBody = GetComponent<Rigidbody2D>();
+            collider = GetComponent<BoxCollider2D>();
+        }
+
         IsActivated = true;
         var sprite = GetComponent<SpriteRenderer>();
         if (sprite)
@@ -122,7 +128,7 @@ public class Bloc : MonoBehaviour
     {
         Destroy(GetComponent<SpriteRenderer>());
         yield return new WaitForSeconds(timeToDestruct);
-
+        
         StartCoroutine(ActivePhysics());
         
         yield return new WaitForSeconds(0.1f);
