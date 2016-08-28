@@ -36,7 +36,6 @@ public class DaddyBloc : MonoBehaviour {
         {
             if (!isLaunched)
                 isLaunched = true;
-            
         }
     }
 
@@ -44,6 +43,8 @@ public class DaddyBloc : MonoBehaviour {
     {
         Destroy(collider);
         Destroy(gameObject.GetComponent<Rigidbody2D>());
+        if (collision.transform.tag == "Zone")
+            Debug.Log("I'm in !");
         foreach (Bloc bloc in transform.GetComponentsInChildren<Bloc>())
         {
             bloc.DetachBloc();

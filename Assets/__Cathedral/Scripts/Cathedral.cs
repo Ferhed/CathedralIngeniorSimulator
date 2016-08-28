@@ -32,6 +32,33 @@ public class Cathedral : MonoBehaviour
         {
             Submit();
         }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            SpawnPelerin(1);
+        }
+        minPelerinX = Camera.main.ScreenToWorldPoint(new Vector3(0f, 0f, 0f)).x;
+        maxPelerinX = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0f, 0f)).x;
+    }
+
+    public float getCompletion()
+    {
+        return completion;
+    }
+
+    public void SpawnPelerin(int number)
+    {
+        for(int i = number;  number>0; number--)
+        {
+            float posX;
+            float side = Random.Range(-1, 1);
+            if (side > 0)
+                posX = Random.Range(cathedraleWidth * blocSize, maxPelerinX);
+            else
+                posX = Random.Range(minPelerinX, -cathedraleWidth * blocSize);
+            // spawn with a deltaX and then move toward his destination
+            Instantiate(pelerinPrefab, new Vector2(posX, pelerinPrefab.transform.position.y), Quaternion.identity);
+            // probably launch a coroutine with fade and movement
+        }
     }
 
     public void Submit()
@@ -67,7 +94,7 @@ public class Cathedral : MonoBehaviour
                 ++count;
             }
         }
-        return count / surface;
+        return completion = (count / surface);
     }
 
     public void OnDrawGizmosSelected()
@@ -90,6 +117,12 @@ public class Cathedral : MonoBehaviour
     private GameObject guide;
     [SerializeField]
     private float blocSize;
+    [SerializeField]
+    private GameObject pelerinPrefab;
+
+    private float completion;
+    private float minPelerinX;
+    private float maxPelerinX;
 
 
 }
