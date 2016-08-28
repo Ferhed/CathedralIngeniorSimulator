@@ -22,11 +22,22 @@ public class DaddyBloc : MonoBehaviour {
         {
             if(spawnOnGround)
                 spawnPrefabGround();
-            else 
+            else if(isLaunched)
             {
                 // FX
+                Debug.Log("DestroyTrigger");
                 Destroy(gameObject);
             }
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.transform.tag.Equals("Ground"))
+        {
+            if (isLaunched)
+                isLaunched = false;
+            
         }
     }
 
@@ -38,6 +49,7 @@ public class DaddyBloc : MonoBehaviour {
         {
             bloc.DetachBloc();
         }
+        Debug.Log("DestroyTrigger");
         Destroy(gameObject);
     }
 
@@ -55,11 +67,6 @@ public class DaddyBloc : MonoBehaviour {
                 break;
             }
         }
-    }
-
-    public void OnMouseDown()
-    {
-        stopBloc();
     }
 
     private void spawnPrefabGround()
@@ -109,4 +116,5 @@ public class DaddyBloc : MonoBehaviour {
     private float teleportHeight = 1.0f;
 
     private BoxCollider2D collider;
+    private bool isLaunched = false;
 }
