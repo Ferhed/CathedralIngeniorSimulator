@@ -15,7 +15,14 @@ public class InputManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            ScreenMouseRay();
+            if(daddyBloc == null)
+            {
+                ScreenMouseRay();
+            }
+            else
+            {
+                daddyBloc.GoPosition();
+            }
         }
     }
 
@@ -38,7 +45,10 @@ public class InputManager : MonoBehaviour
                 }
                 else if (c.transform.tag == "DaddyBloc")
                 {
-                    c.transform.GetComponent<DaddyBloc>().stopBloc();
+                    var daddy = c.transform.GetComponent<DaddyBloc>();
+                    daddy.stopBloc();
+                    daddyBloc = daddy;
+                    break;
                 }
             }
         }
@@ -47,11 +57,15 @@ public class InputManager : MonoBehaviour
             Collider2D collider = Physics2D.OverlapCircle(v, overlapRange);
             if (collider != null && collider.tag == "DaddyBloc")
             {
-                collider.transform.GetComponent<DaddyBloc>().stopBloc();
+                var daddy = collider.transform.GetComponent<DaddyBloc>();
+                daddy.stopBloc();
+                daddyBloc = daddy;
             }
 
         }
     }
     [SerializeField]
     private float overlapRange = 0.3f;
+
+    private DaddyBloc daddyBloc;
 }
