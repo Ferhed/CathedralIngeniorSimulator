@@ -36,10 +36,20 @@ public class MusicManager : MonoBehaviour {
         audio.Play();
     }
 
+    public void launchGame()
+    {
+        audio.Stop();
+        audio.clip = ambiance;
+        audio.loop = true;
+        audio.Play();
+    }
+
     [SerializeField]
     private AudioClip intro;
     [SerializeField]
     private AudioClip loop;
+    [SerializeField]
+    private AudioClip ambiance;
 
     private AudioSource audio;
 }
