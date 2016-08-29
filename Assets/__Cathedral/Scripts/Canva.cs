@@ -21,6 +21,7 @@ public class Canva : MonoBehaviour {
         panelGame.gameObject.SetActive(true);
         Invoke("ActiveBoolean", 1.0f);
         Cathedral.Instance.Init();
+        GetComponent<AudioSource>().Play();
     }
 
     private void Update()
