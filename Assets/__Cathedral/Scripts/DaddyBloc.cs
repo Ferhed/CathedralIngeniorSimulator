@@ -119,6 +119,7 @@ public class DaddyBloc : MonoBehaviour {
     {
         StopCoroutine("launch");
         collider.isTrigger = false;
+        EffectManager.Instance.InstantiateFx(EffectManager.Instance.picking, transform.position);
         RotateBlock();
         ghost = Instantiate(ghostPrefab) as GameObject;
         blinkInstance = Instantiate(blinkPrefab) as GameObject;
