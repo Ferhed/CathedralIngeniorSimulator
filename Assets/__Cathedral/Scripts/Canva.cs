@@ -10,11 +10,13 @@ public class Canva : MonoBehaviour {
 
     void Awake()
     {
+        Time.timeScale = 0f;
         Instance = this;
     }
 
     public void LaunchGame()
     {
+        Time.timeScale = 1f;
         panelMenu.gameObject.SetActive(false);
         panelGame.gameObject.SetActive(true);
         Invoke("ActiveBoolean", 1.0f);
@@ -25,11 +27,14 @@ public class Canva : MonoBehaviour {
     {
         if(GameIsLaunched)
         {
+            if (gameEnded)
+                return;
             currentTime += Time.deltaTime;
             timer.fillAmount = currentTime / Cathedral.Instance.MaxTime;
             if(currentTime> Cathedral.Instance.MaxTime)
             {
                 Cathedral.Instance.SubmitToGod();
+                gameEnded = true;
             }
         }
     }
@@ -42,6 +47,7 @@ public class Canva : MonoBehaviour {
     public void ResetTime()
     {
         currentTime = 0.0f;
+        gameEnded = false;
     }
 
     public void displayInfo()
@@ -64,4 +70,5 @@ public class Canva : MonoBehaviour {
     private Image timer;
 
     private float currentTime = 0.0f;
+    private bool gameEnded = false;
 }
