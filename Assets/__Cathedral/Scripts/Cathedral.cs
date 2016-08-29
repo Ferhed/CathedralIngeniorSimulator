@@ -89,6 +89,17 @@ public class Cathedral : MonoBehaviour
             pilgrims.Add(tmp.GetComponent<Pelerin>());
             totalPelerin++;
         }
+        if(pilgrimNumber > pelerinForHouse)
+        {
+            pelerinForHouse += 10;
+            float posX;
+            int side = Random.Range(0, 100);
+            if (side > 50)
+                posX = Random.Range(cathedraleWidth / 2f * blocSize, maxPelerinX);
+            else
+                posX = Random.Range(minPelerinX, -cathedraleWidth / 2f * blocSize);
+            GameObject tmp = Instantiate(house, new Vector2(posX, 24.0f), Quaternion.identity) as GameObject;
+        }
     }
 
     public bool Submit()
@@ -200,6 +211,8 @@ public class Cathedral : MonoBehaviour
     private GameObject kamikazePrefab;
     [SerializeField]
     private GameObject StartBlock;
+    [SerializeField]
+    private GameObject house;
     [Header("VictoryValues")]
     [SerializeField]
     private float scoreAcceptance = 65.0f;
@@ -217,5 +230,5 @@ public class Cathedral : MonoBehaviour
     private float completion;
     private float minPelerinX;
     private float maxPelerinX;
-    
+    private int pelerinForHouse = 10;
 }
