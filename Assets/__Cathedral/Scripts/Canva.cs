@@ -30,6 +30,7 @@ public class Canva : MonoBehaviour {
             if(currentTime> Cathedral.Instance.MaxTime)
             {
                 Cathedral.Instance.SubmitToGod();
+                GameIsLaunched = false;
             }
         }
     }
