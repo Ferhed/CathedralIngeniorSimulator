@@ -13,6 +13,10 @@ public class Cathedral : MonoBehaviour
     {
         Instance = this;
         MaxHeight = 0.0f;
+    }
+
+    public void Init()
+    {
         Invoke("spawnKamikaze", Random.RandomRange(2f, 5f));
     }
     // Use this for initialization
@@ -31,7 +35,7 @@ public class Cathedral : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
+        /*if (Input.GetKeyDown(KeyCode.A))
         {
             var mouse_position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Instantiate(daddyPrefab, new Vector3(mouse_position.x, mouse_position.y, 0.0f), Quaternion.identity);
@@ -43,7 +47,7 @@ public class Cathedral : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
         {
             SpawnPelerin(1);
-        }
+        }*/
         minPelerinX = Camera.main.ScreenToWorldPoint(new Vector3(0f, 0f, 0f)).x;
         maxPelerinX = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0f, 0f)).x;
     }
@@ -95,13 +99,14 @@ public class Cathedral : MonoBehaviour
                 tmp.transform.localScale = new Vector3(-tmp.transform.localScale.x, tmp.transform.localScale.y, tmp.transform.localScale.z);
             // probably launch a coroutine with fade and movement
             pilgrims.Add(tmp.GetComponent<Pelerin>());
+            totalPelerin++;
         }
     }
 
     public bool Submit()
     {
         float score = EvaluateCathedrale();
-        if (score > scoreAcceptance)
+        if (score > (scoreAcceptance/100f))
             return true;
         else
             return false;
@@ -148,12 +153,19 @@ public class Cathedral : MonoBehaviour
             && pilgrimNumber > pilgrimNeeded
             )
         {
-            Debug.Log("You Win");
+            Win();
         }
         else
         {
             Reset();
         }
+    }
+
+    private void Win()
+    {
+        Time.timeScale = 0;
+        Canva.Instance.transform.GetChild(0).gameObject.SetActive(false);
+        Canva.Instance.transform.GetChild(2).gameObject.SetActive(true);
     }
 
     public void Reset()
@@ -206,6 +218,10 @@ public class Cathedral : MonoBehaviour
     private float heightMinimum = 500.0f;
     [SerializeField]
     private int pilgrimNeeded= 10;
+
+    public int totalPelerin = 0;
+    public int kamikazeKilled = 0;
+    public int pelerinKilled = 0;
 
     private List<Pelerin> pilgrims = new List<Pelerin>();
     private int pilgrimNumber = 0;

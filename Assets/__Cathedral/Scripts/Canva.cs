@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -17,11 +18,25 @@ public class Canva : MonoBehaviour {
         panelMenu.gameObject.SetActive(false);
         panelGame.gameObject.SetActive(true);
         Invoke("ActiveBoolean", 1.0f);
+        Cathedral.Instance.Init();
     }
 
     private void ActiveBoolean()
     {
         GameIsLaunched = true;
+    }
+
+
+    public void displayInfo()
+    {
+        transform.GetChild(2).gameObject.SetActive(false);
+        transform.GetChild(3).gameObject.SetActive(true);
+    }
+
+    public void Reload()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Test_Ben");
     }
 
     [SerializeField]

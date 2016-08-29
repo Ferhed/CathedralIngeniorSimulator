@@ -19,6 +19,7 @@ public class Pelerin : MonoBehaviour {
         Instantiate(tmp, new Vector2(transform.position.x, tmp.transform.position.y), Quaternion.identity);
         EffectManager.Instance.InstantiateFx(EffectManager.Instance.blood, transform.position);
         Destroy(gameObject,0.1f);
+        Cathedral.Instance.pelerinKilled++;
     }
 
     [SerializeField]
