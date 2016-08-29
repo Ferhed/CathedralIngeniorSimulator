@@ -22,11 +22,12 @@ public class Canva : MonoBehaviour {
         Invoke("ActiveBoolean", 1.0f);
         Cathedral.Instance.Init();
         GetComponent<AudioSource>().Play();
+        Invoke("ReallyGo", 6.0f);
     }
 
     private void Update()
     {
-        if(GameIsLaunched)
+        if(GameIsLaunched && WaitAminutePlease)
         {
             if (gameEnded)
                 return;
@@ -51,6 +52,12 @@ public class Canva : MonoBehaviour {
         gameEnded = false;
     }
 
+    private void ReallyGo()
+    {
+        WaitAminutePlease = true;
+        panelGame.gameObject.SetActive(true);
+    }
+
     public void displayInfo()
     {
         transform.GetChild(2).gameObject.SetActive(false);
@@ -70,6 +77,7 @@ public class Canva : MonoBehaviour {
     [SerializeField]
     private Image timer;
 
+    private bool WaitAminutePlease = false;
     private float currentTime = 0.0f;
     private bool gameEnded = false;
 }
