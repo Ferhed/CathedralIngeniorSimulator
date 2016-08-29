@@ -53,6 +53,7 @@ public class InputManager : MonoBehaviour
             {
                 var kamikaze = col.transform.GetComponent<Kamikaze>();
                 kamikaze.Explosion();
+                Cathedral.Instance.kamikazeKilled++;
             }
             ResetCursor();
         }
