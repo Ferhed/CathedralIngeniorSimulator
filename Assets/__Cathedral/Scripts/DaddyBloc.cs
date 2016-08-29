@@ -117,6 +117,7 @@ public class DaddyBloc : MonoBehaviour {
 
     public void stopBloc()
     {
+        InputManager.Instance.GetComponent<AudioSource>().PlayOneShot(grab, 1f);
         StopCoroutine("launch");
         collider.isTrigger = false;
         EffectManager.Instance.InstantiateFx(EffectManager.Instance.picking, transform.position);
@@ -242,6 +243,10 @@ public class DaddyBloc : MonoBehaviour {
     private GameObject ghostPrefab;
     [SerializeField]
     private GameObject blinkPrefab;
+    [SerializeField]
+    private AudioClip grab;
+    [SerializeField]
+    private AudioClip drop;
 
     private BoxCollider2D collider;
     private bool isLaunched = false;

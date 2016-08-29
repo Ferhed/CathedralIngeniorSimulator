@@ -10,14 +10,19 @@ public class Canva : MonoBehaviour {
 
     void Awake()
     {
+        Time.timeScale = 0f;
         Instance = this;
     }
 
     public void LaunchGame()
     {
+        Time.timeScale = 1f;
         panelMenu.gameObject.SetActive(false);
+        panelGame.gameObject.SetActive(true);
         Invoke("ActiveBoolean", 1.0f);
         Cathedral.Instance.Init();
+        GetComponent<AudioSource>().Play();
+        MusicManager.instance.launchGame();
         Invoke("ReallyGo", 6.0f);
     }
 
@@ -25,12 +30,14 @@ public class Canva : MonoBehaviour {
     {
         if(GameIsLaunched && WaitAminutePlease)
         {
+            if (gameEnded)
+                return;
             currentTime += Time.deltaTime;
             timer.fillAmount = currentTime / Cathedral.Instance.MaxTime;
             if(currentTime> Cathedral.Instance.MaxTime)
             {
                 Cathedral.Instance.SubmitToGod();
-                GameIsLaunched = false;
+                gameEnded = true;
             }
         }
     }
@@ -43,6 +50,7 @@ public class Canva : MonoBehaviour {
     public void ResetTime()
     {
         currentTime = 0.0f;
+        gameEnded = false;
     }
 
     private void ReallyGo()
@@ -72,4 +80,5 @@ public class Canva : MonoBehaviour {
 
     private bool WaitAminutePlease = false;
     private float currentTime = 0.0f;
+    private bool gameEnded = false;
 }
