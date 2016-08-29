@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class CameraScript : MonoBehaviour {
 
@@ -26,6 +27,11 @@ public class CameraScript : MonoBehaviour {
         height = Mathf.Min(maxSize, height);
         positionY = height;
         size = height+30.0f;
+    }
+
+    public void ScreenShake()
+    {
+        transform.DOShakePosition(0.5f,5.0f);
     }
 
     [SerializeField]

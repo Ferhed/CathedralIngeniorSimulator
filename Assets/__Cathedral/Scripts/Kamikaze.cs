@@ -129,6 +129,7 @@ public class Kamikaze : MonoBehaviour {
                 bloc.LaunchDestroyMe();
             }
         }
+        CameraScript.Instance.ScreenShake();
         Destroy(gameObject);
     }
 
