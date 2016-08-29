@@ -57,7 +57,7 @@ public class InputManager : MonoBehaviour
             }
             ResetCursor();
         }
-        /*else
+        else
         {
             Collider2D collider = Physics2D.OverlapCircle(v, overlapRange);
             if (collider != null && collider.tag == "DaddyBloc")
@@ -66,8 +66,7 @@ public class InputManager : MonoBehaviour
                 daddy.stopBloc();
                 daddyBloc = daddy;
             }
-
-        }*/
+        }
     }
 
     public Texture2D cursorTextureNormal;
