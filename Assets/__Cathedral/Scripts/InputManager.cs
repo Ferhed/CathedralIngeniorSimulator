@@ -41,7 +41,7 @@ public class InputManager : MonoBehaviour
             {
                 if (c.transform.tag == "Bloc")
                 {
-                    StartCoroutine(c.transform.GetComponent<Bloc>().DestroyMe());
+                    c.transform.GetComponent<Bloc>().LaunchDestroyMe();
                 }
                 else if (c.transform.tag == "DaddyBloc")
                 {
@@ -50,9 +50,14 @@ public class InputManager : MonoBehaviour
                     daddyBloc = daddy;
                     break;
                 }
+                else if (c.transform.tag == "Kamikaze")
+                {
+                    var kamikaze = c.transform.GetComponent<Kamikaze>();
+                    kamikaze.Explosion();
+                }
             }
         }
-        else
+        /*else
         {
             Collider2D collider = Physics2D.OverlapCircle(v, overlapRange);
             if (collider != null && collider.tag == "DaddyBloc")
@@ -62,7 +67,7 @@ public class InputManager : MonoBehaviour
                 daddyBloc = daddy;
             }
 
-        }
+        }*/
     }
     [SerializeField]
     private float overlapRange = 0.3f;

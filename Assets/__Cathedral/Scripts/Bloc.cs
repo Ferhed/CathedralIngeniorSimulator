@@ -78,7 +78,12 @@ public class Bloc : MonoBehaviour
         }
     }
 
-    public IEnumerator ActivePhysics()
+    public void LaunchActivePhysics()
+    {
+        StartCoroutine(ActivePhysics());
+    }
+
+    private IEnumerator ActivePhysics()
     {
         if (rigidBody == null)
         {
@@ -115,7 +120,7 @@ public class Bloc : MonoBehaviour
                         &&!bloc.IsActivated
                         )
                     {
-                        StartCoroutine(bloc.ActivePhysics());
+                        bloc.LaunchActivePhysics();
                     }
                 }
             }
@@ -127,17 +132,19 @@ public class Bloc : MonoBehaviour
                 if (hit.transform != transform)
                 {
                     var bloc = hit.transform.GetComponent<Bloc>();
-                    if (!bloc.IsActivated)
+                    if (bloc != null
+                        && !bloc.IsActivated
+                        )
                     {
-                        StartCoroutine(bloc.ActivePhysics());
+                        bloc.LaunchActivePhysics();
                     }
                 }
             }
         }
     }
 
-    public IEnumerator DestroyMe()
-    {
+    private IEnumerator DestroyMe()
+    {        
         Destroy(GetComponent<SpriteRenderer>());
         yield return new WaitForSeconds(timeToDestruct);
         
@@ -145,6 +152,17 @@ public class Bloc : MonoBehaviour
         
         yield return new WaitForSeconds(0.1f);
 
+        DestroyGameObject();
+    }
+
+    public void LaunchDestroyMe()
+    {
+        StartCoroutine(DestroyMe());
+    }
+
+    private void DestroyGameObject()
+    {
+        StopAllCoroutines();
         Destroy(gameObject);
     }
 

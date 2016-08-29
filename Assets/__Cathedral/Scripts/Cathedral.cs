@@ -47,16 +47,28 @@ public class Cathedral : MonoBehaviour
         minPelerinX = Camera.main.ScreenToWorldPoint(new Vector3(0f, 0f, 0f)).x;
         maxPelerinX = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0f, 0f)).x;
     }
-
+    
     void spawnKamikaze()
     {
 
         int side = Random.Range(0, 2);
         if (side == 0)
-            Instantiate(kamikazePrefab, new Vector2(minPelerinX-50f, Mathf.Max(50f, Random.Range(50f, MaxHeight))), Quaternion.identity);
+        {
+            var y_spawn = Mathf.Max(50f, Random.Range(50f, MaxHeight)-100.0f);
+            GameObject kami = Instantiate(kamikazePrefab, new Vector2(minPelerinX-50f,y_spawn), Quaternion.identity)as GameObject;
+            Kamikaze kamikaze = kami.GetComponent<Kamikaze>();
+            var y_target = Mathf.Max(50f, Random.Range(50f, MaxHeight));
+            kamikaze.Direction = (new Vector3(0.0f,y_target)- kami.transform.position).normalized;
+        }
         else
-            Instantiate(kamikazePrefab, new Vector2(maxPelerinX+50f, Mathf.Max(50f, Random.Range(50f, MaxHeight))), Quaternion.identity);
-        Invoke("spawnKamikaze", Random.RandomRange(2f, 5f));
+        {
+            var y_spawn = Mathf.Max(50f, Random.Range(50f, MaxHeight)-100.0f);
+            GameObject kami = Instantiate(kamikazePrefab, new Vector2(maxPelerinX + 50f, y_spawn), Quaternion.identity) as GameObject;
+            Kamikaze kamikaze = kami.GetComponent<Kamikaze>();
+            var y_target = Mathf.Max(50f, Random.Range(50f, MaxHeight));
+            kamikaze.Direction = (new Vector3(0.0f, y_target) - kami.transform.position).normalized;
+        }
+        Invoke("spawnKamikaze", Random.RandomRange(4f, 5f));
     }
 
     public float getCompletion()

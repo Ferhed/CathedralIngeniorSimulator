@@ -4,6 +4,7 @@ using System.Collections;
 public class Kamikaze : MonoBehaviour {
 
     public bool GoToTheRight = false;
+    public Vector3 Direction;
 
 	void Awake()
     {
@@ -15,6 +16,7 @@ public class Kamikaze : MonoBehaviour {
             transform.localScale = tmp;
             GoToTheRight = true;
         }
+        speed += Random.Range(-0.2f, 0.2f) * speed;
     }
 
     void FixedUpdate()
@@ -86,10 +88,7 @@ public class Kamikaze : MonoBehaviour {
         float time = 0.0f;
         while (time < 1.0f)
         {
-            if (GoToTheRight)
-                transform.position = transform.position + Vector3.right * Time.deltaTime * speed;
-            else
-                transform.position = transform.position + Vector3.left * Time.deltaTime * speed;
+            transform.position = transform.position +Direction * Time.deltaTime * speed;
             time += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
@@ -116,7 +115,28 @@ public class Kamikaze : MonoBehaviour {
             yield return new WaitForEndOfFrame(); 
         }
         deplacementActive = true;
+    }
 
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.tag == "Bloc")
+        {
+            Explosion();
+        }
+    }
+
+    public void Explosion()
+    {
+        Collider2D[] boxs = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
+        foreach (Collider2D box in boxs)
+        {
+            if (box.tag == "Bloc")
+            {
+                var bloc = box.GetComponent<Bloc>();
+                bloc.LaunchDestroyMe();
+            }
+        }
+        Destroy(gameObject);
     }
 
     [SerializeField]
@@ -125,6 +145,8 @@ public class Kamikaze : MonoBehaviour {
     private float sinusAmplitude = 50.0f;
     [SerializeField]
     private float loopingRadius = 50.0f;
+    [SerializeField]
+    private float explosionRadius = 20.0f;
 
     private bool deplacementActive = true;
 }
