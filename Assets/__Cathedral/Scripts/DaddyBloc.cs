@@ -18,7 +18,7 @@ public class DaddyBloc : MonoBehaviour {
         foreach(Collider2D col in GetComponentsInChildren<Collider2D>())
             col.isTrigger = true;
         launchLenght = Mathf.Abs(transform.position.x) * 2f;
-        launchHeight = Cathedral.Instance.MaxHeight + gapAboveTheMaxHeight;
+        launchHeight = Mathf.Max( Cathedral.Instance.MaxHeight, 250.0f) * 1.7f;
         launchHeight += (Random.Range(-heightVariance, heightVariance))*launchHeight;
         launchDuration += (Random.Range(-0.5f, 0.5f)) * launchDuration;
         rotationSpeed += (Random.Range(-0.2f, 0.2f)) * rotationSpeed;

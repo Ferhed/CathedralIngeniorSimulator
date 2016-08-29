@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class CameraScript : MonoBehaviour {
 
@@ -24,8 +25,13 @@ public class CameraScript : MonoBehaviour {
     {
         var height = Mathf.Max(minSize, Cathedral.Instance.MaxHeight);
         height = Mathf.Min(maxSize, height);
-        positionY = height - 30.0f;
-        size = height;
+        positionY = height;
+        size = height+30.0f;
+    }
+
+    public void ScreenShake()
+    {
+        transform.DOShakePosition(0.5f,5.0f);
     }
 
     [SerializeField]

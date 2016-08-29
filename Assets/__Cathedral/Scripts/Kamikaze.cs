@@ -42,14 +42,7 @@ public class Kamikaze : MonoBehaviour {
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.P))
-        {
-            StartCoroutine(LoopingYolloh());
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            StartCoroutine(SinusYolloh());
-        }
+        currentSpeed = speed + Cathedral.Instance.MaxHeight/ 3.0f;
     }
 
     private IEnumerator LoopingYolloh()
@@ -88,7 +81,7 @@ public class Kamikaze : MonoBehaviour {
         float time = 0.0f;
         while (time < 1.0f)
         {
-            transform.position = transform.position +Direction * Time.deltaTime * speed;
+            transform.position = transform.position +Direction * Time.deltaTime * currentSpeed;
             time += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
@@ -107,9 +100,9 @@ public class Kamikaze : MonoBehaviour {
             float posX;
             if (GoToTheRight)
 
-                posX = transform.position.x + Time.deltaTime * speed;
+                posX = transform.position.x + Time.deltaTime * currentSpeed;
             else
-                posX = transform.position.x - Time.deltaTime * speed;
+                posX = transform.position.x - Time.deltaTime * currentSpeed;
             transform.position = new Vector2(posX, posY);
             time += Time.deltaTime;
             yield return new WaitForEndOfFrame(); 
@@ -136,7 +129,18 @@ public class Kamikaze : MonoBehaviour {
                 bloc.LaunchDestroyMe();
             }
         }
+        CameraScript.Instance.ScreenShake();
         Destroy(gameObject);
+    }
+
+    void OnMouseEnter()
+    {
+        InputManager.Instance.SetCursor(InputManager.Instance.cursorTextureKamikaze);
+    }
+
+    void OnMouseExit()
+    {
+        InputManager.Instance.SetCursor(InputManager.Instance.cursorTextureNormal);
     }
 
     [SerializeField]
@@ -148,5 +152,6 @@ public class Kamikaze : MonoBehaviour {
     [SerializeField]
     private float explosionRadius = 20.0f;
 
+    private float currentSpeed;
     private bool deplacementActive = true;
 }
