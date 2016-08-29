@@ -8,6 +8,7 @@ public class Cathedral : MonoBehaviour
     public float MaxHeight { get; private set; }
     public float MaxBuildHeight { get { return maxBuildHeight; } }
     public BoxCollider2D GuideCollider { get; private set; }
+    public float MaxTime = 45f;
 
     void Awake()
     {
@@ -35,19 +36,6 @@ public class Cathedral : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*if (Input.GetKeyDown(KeyCode.A))
-        {
-            var mouse_position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Instantiate(daddyPrefab, new Vector3(mouse_position.x, mouse_position.y, 0.0f), Quaternion.identity);
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            Submit();
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            SpawnPelerin(1);
-        }*/
         minPelerinX = Camera.main.ScreenToWorldPoint(new Vector3(0f, 0f, 0f)).x;
         maxPelerinX = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0f, 0f)).x;
     }
@@ -191,6 +179,7 @@ public class Cathedral : MonoBehaviour
         var go = Instantiate(StartBlock);
         go.transform.parent = transform;
         go.transform.position = new Vector3(0.0f, 77.0f, 0.0f);
+        Canva.Instance.ResetTime();
     }
 
     [SerializeField]
