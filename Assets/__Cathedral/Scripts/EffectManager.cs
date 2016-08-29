@@ -18,4 +18,5 @@ public class EffectManager : MonoBehaviour {
     public GameObject blood;
     public GameObject kamikaze;
     public GameObject fallOff;
+    public GameObject debris;
 }
