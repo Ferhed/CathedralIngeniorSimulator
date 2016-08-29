@@ -21,11 +21,28 @@ public class Canva : MonoBehaviour {
         Cathedral.Instance.Init();
     }
 
+    private void Update()
+    {
+        if(GameIsLaunched)
+        {
+            currentTime += Time.deltaTime;
+            timer.fillAmount = currentTime / Cathedral.Instance.MaxTime;
+            if(currentTime> Cathedral.Instance.MaxTime)
+            {
+                Cathedral.Instance.SubmitToGod();
+            }
+        }
+    }
+
     private void ActiveBoolean()
     {
         GameIsLaunched = true;
     }
 
+    public void ResetTime()
+    {
+        currentTime = 0.0f;
+    }
 
     public void displayInfo()
     {
@@ -43,4 +60,8 @@ public class Canva : MonoBehaviour {
     private RectTransform panelGame;
     [SerializeField]
     private RectTransform panelMenu;
+    [SerializeField]
+    private Image timer;
+
+    private float currentTime = 0.0f;
 }
