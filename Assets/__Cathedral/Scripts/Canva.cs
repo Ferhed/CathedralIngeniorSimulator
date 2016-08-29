@@ -16,14 +16,14 @@ public class Canva : MonoBehaviour {
     public void LaunchGame()
     {
         panelMenu.gameObject.SetActive(false);
-        panelGame.gameObject.SetActive(true);
         Invoke("ActiveBoolean", 1.0f);
         Cathedral.Instance.Init();
+        Invoke("ReallyGo", 6.0f);
     }
 
     private void Update()
     {
-        if(GameIsLaunched)
+        if(GameIsLaunched && WaitAminutePlease)
         {
             currentTime += Time.deltaTime;
             timer.fillAmount = currentTime / Cathedral.Instance.MaxTime;
@@ -45,6 +45,12 @@ public class Canva : MonoBehaviour {
         currentTime = 0.0f;
     }
 
+    private void ReallyGo()
+    {
+        WaitAminutePlease = true;
+        panelGame.gameObject.SetActive(true);
+    }
+
     public void displayInfo()
     {
         transform.GetChild(2).gameObject.SetActive(false);
@@ -64,5 +70,6 @@ public class Canva : MonoBehaviour {
     [SerializeField]
     private Image timer;
 
+    private bool WaitAminutePlease = false;
     private float currentTime = 0.0f;
 }
