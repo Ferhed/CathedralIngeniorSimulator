@@ -22,6 +22,7 @@ public class Canva : MonoBehaviour {
         Invoke("ActiveBoolean", 1.0f);
         Cathedral.Instance.Init();
         GetComponent<AudioSource>().Play();
+        MusicManager.instance.launchGame();
         Invoke("ReallyGo", 6.0f);
     }
 

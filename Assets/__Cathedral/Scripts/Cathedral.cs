@@ -165,14 +165,14 @@ public class Cathedral : MonoBehaviour
             )
         {
 
-            MusicManager.instance.GetComponent<AudioSource>().volume /= 2f;
+            MusicManager.instance.GetComponent<AudioSource>().volume = 0f;
             InputManager.Instance.GetComponent<AudioSource>().PlayOneShot(winSound);
             Invoke( "Win",4.0f);
         }
         else
         {
             go.GetComponentInChildren<MeshRenderer>().material.color = Color.red;
-            MusicManager.instance.GetComponent<AudioSource>().volume /= 2f;
+            MusicManager.instance.GetComponent<AudioSource>().volume = 0f;
             InputManager.Instance.GetComponent<AudioSource>().PlayOneShot(loseSounds[Random.Range(0, loseSounds.Count)]);
             Invoke("Reset", 4.0f);
             Invoke("RelaunchScene", 9.0f);
@@ -193,7 +193,8 @@ public class Cathedral : MonoBehaviour
 
     public void Reset()
     {
-        foreach(Bloc bloc in GetComponentsInChildren<Bloc>())
+        InputManager.Instance.GetComponent<AudioSource>().PlayOneShot(lostGame);
+        foreach (Bloc bloc in GetComponentsInChildren<Bloc>())
         {
             bloc.LaunchActivePhysics();
         }
@@ -251,6 +252,8 @@ public class Cathedral : MonoBehaviour
     private float spawnEnemySpeedMax = 5.0f;
     [SerializeField]
     private AudioClip winSound;
+    [SerializeField]
+    private AudioClip lostGame;
     [SerializeField]
     private List<AudioClip> loseSounds = new List<AudioClip>();
 
