@@ -17,6 +17,7 @@ public class Canva : MonoBehaviour {
         panelMenu.gameObject.SetActive(false);
         panelGame.gameObject.SetActive(true);
         Invoke("ActiveBoolean", 1.0f);
+        Cathedral.Instance.Init();
     }
 
     private void ActiveBoolean()

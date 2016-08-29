@@ -13,6 +13,10 @@ public class Cathedral : MonoBehaviour
     {
         Instance = this;
         MaxHeight = 0.0f;
+    }
+
+    public void Init()
+    {
         Invoke("spawnKamikaze", Random.RandomRange(2f, 5f));
     }
     // Use this for initialization
