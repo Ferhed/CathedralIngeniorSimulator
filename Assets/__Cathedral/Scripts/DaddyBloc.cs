@@ -206,6 +206,16 @@ public class DaddyBloc : MonoBehaviour {
         }*/
     }
 
+    void OnMouseEnter()
+    {
+        InputManager.Instance.SetCursor(InputManager.Instance.cursorTextureBloc);
+    }
+
+    void OnMouseExit()
+    {
+        InputManager.Instance.SetCursor(InputManager.Instance.cursorTextureNormal);
+    }
+
     [Header("Tweak")]
     [SerializeField]
     private float launchDuration;

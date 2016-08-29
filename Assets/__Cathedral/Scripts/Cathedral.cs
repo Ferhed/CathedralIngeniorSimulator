@@ -50,23 +50,21 @@ public class Cathedral : MonoBehaviour
     
     void spawnKamikaze()
     {
-
+        GameObject kami;
         int side = Random.Range(0, 2);
         if (side == 0)
         {
             var y_spawn = Mathf.Max(50f, Random.Range(50f, MaxHeight))*1.5f;
-            GameObject kami = Instantiate(kamikazePrefab, new Vector2(minPelerinX-50f,y_spawn), Quaternion.identity)as GameObject;
+            kami = Instantiate(kamikazePrefab, new Vector2(minPelerinX-50f,y_spawn), Quaternion.identity)as GameObject;
             Kamikaze kamikaze = kami.GetComponent<Kamikaze>();
         }
         else
         {
             var y_spawn = Mathf.Max(50f, Random.Range(50f, MaxHeight))*1.5f;
-            GameObject kami = Instantiate(kamikazePrefab, new Vector2(maxPelerinX + 50f, y_spawn), Quaternion.identity) as GameObject;
+            kami = Instantiate(kamikazePrefab, new Vector2(maxPelerinX + 50f, y_spawn), Quaternion.identity) as GameObject;
             Kamikaze kamikaze = kami.GetComponent<Kamikaze>();
-            var y_target = Mathf.Max(50f, Random.Range(50f, MaxHeight));
-            kamikaze.Direction = (new Vector3(0.0f, y_target) - kami.transform.position).normalized;
         }
-        Invoke("spawnKamikaze", Random.RandomRange(4f, 5f));
+        Invoke("spawnKamikaze", Random.Range(4.0f, 6.0f));
     }
 
     public float getCompletion()
@@ -162,12 +160,20 @@ public class Cathedral : MonoBehaviour
         MaxHeight = 0.0f;
         CameraScript.Instance.ChangeDistance();
         
+        for(int i = 0; i< CameraScript.Instance.transform.childCount;i++)
+        {
+            Destroy(CameraScript.Instance.transform.GetChild(0).gameObject);
+        }
+
         while(pilgrims.Count>0)
         {
             var pilgr = pilgrims[0];
             pilgr.Death();
             pilgrims.Remove(pilgr);
         }
+        var go = Instantiate(StartBlock);
+        go.transform.parent = transform;
+        go.transform.position = new Vector3(0.0f, 77.0f, 0.0f);
     }
 
     [SerializeField]
@@ -186,6 +192,8 @@ public class Cathedral : MonoBehaviour
     private float maxBuildHeight = 600.0f;
     [SerializeField]
     private GameObject kamikazePrefab;
+    [SerializeField]
+    private GameObject StartBlock;
     [Header("VictoryValues")]
     [SerializeField]
     private float scoreAcceptance = 65.0f;
@@ -199,4 +207,5 @@ public class Cathedral : MonoBehaviour
     private float completion;
     private float minPelerinX;
     private float maxPelerinX;
+    
 }
