@@ -219,6 +219,16 @@ public class Bloc : MonoBehaviour
         }
     }
 
+    void OnMouseEnter()
+    {
+        InputManager.Instance.SetCursor(InputManager.Instance.cursorTextureBloc);
+    }
+
+    void OnMouseExit()
+    {
+        InputManager.Instance.SetCursor(InputManager.Instance.cursorTextureNormal);
+    }
+
     [SerializeField]
     private float timeToDestruct = 0.5f;
     [SerializeField]

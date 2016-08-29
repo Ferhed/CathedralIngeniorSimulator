@@ -17,6 +17,8 @@ public class Kamikaze : MonoBehaviour {
             GoToTheRight = true;
         }
         speed += Random.Range(-0.2f, 0.2f) * speed;
+
+        Direction = (Cathedral.Instance.transform.position + Vector3.up * 20.0f - transform.position).normalized;
     }
 
     void FixedUpdate()
@@ -72,6 +74,7 @@ public class Kamikaze : MonoBehaviour {
         transform.parent = null;
         Destroy(go);
 
+        Direction = (Cathedral.Instance.transform.position + Vector3.up * 20.0f - transform.position).normalized;
         deplacementActive = true;    
     }
 
@@ -105,8 +108,9 @@ public class Kamikaze : MonoBehaviour {
                 posX = transform.position.x - Time.deltaTime * currentSpeed;
             transform.position = new Vector2(posX, posY);
             time += Time.deltaTime;
-            yield return new WaitForEndOfFrame(); 
+            yield return new WaitForEndOfFrame();
         }
+        Direction = (Cathedral.Instance.transform.position + Vector3.up * 20.0f - transform.position).normalized;
         deplacementActive = true;
     }
 

@@ -54,15 +54,13 @@ public class Cathedral : MonoBehaviour
         int side = Random.Range(0, 2);
         if (side == 0)
         {
-            var y_spawn = Mathf.Max(50f, Random.Range(50f, MaxHeight)-100.0f);
+            var y_spawn = Mathf.Max(50f, Random.Range(50f, MaxHeight))*3.0f;
             GameObject kami = Instantiate(kamikazePrefab, new Vector2(minPelerinX-50f,y_spawn), Quaternion.identity)as GameObject;
             Kamikaze kamikaze = kami.GetComponent<Kamikaze>();
-            var y_target = Mathf.Max(50f, Random.Range(50f, MaxHeight));
-            kamikaze.Direction = (new Vector3(0.0f,y_target)- kami.transform.position).normalized;
         }
         else
         {
-            var y_spawn = Mathf.Max(50f, Random.Range(50f, MaxHeight)-100.0f);
+            var y_spawn = Mathf.Max(50f, Random.Range(50f, MaxHeight))*3.0f;
             GameObject kami = Instantiate(kamikazePrefab, new Vector2(maxPelerinX + 50f, y_spawn), Quaternion.identity) as GameObject;
             Kamikaze kamikaze = kami.GetComponent<Kamikaze>();
             var y_target = Mathf.Max(50f, Random.Range(50f, MaxHeight));
@@ -169,7 +167,6 @@ public class Cathedral : MonoBehaviour
             var pilgr = pilgrims[0];
             pilgr.Death();
             pilgrims.Remove(pilgr);
-
         }
     }
 

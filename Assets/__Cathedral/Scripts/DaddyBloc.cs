@@ -33,7 +33,9 @@ public class DaddyBloc : MonoBehaviour {
             transform.position = Vector2.Lerp(transform.position, position, speedToFollowMouse);
             Vector3 tmp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             tmp.z = 0;
+            blinkInstance.transform.position = transform.position;
             ghost.transform.position = tmp;
+            blinkInstance.transform.localScale = new Vector3(blinkInstance.transform.localScale.x, Vector3.Distance(transform.position, tmp), 0.0f);
         }
         transform.Rotate(transform.forward, rotationSpeed * Time.fixedDeltaTime);
     }
@@ -119,12 +121,15 @@ public class DaddyBloc : MonoBehaviour {
         collider.isTrigger = false;
         RotateBlock();
         ghost = Instantiate(ghostPrefab) as GameObject;
+        blinkInstance = Instantiate(blinkPrefab) as GameObject;
+        blinkInstance.transform.localScale = new Vector3(collider.size.x, 0.0f, 0.0f);
         IsMovableByMouse = true;
     }
 
     public void GoPosition()
     {
         released = true;
+        Destroy(blinkInstance);
         IsMovableByMouse = false;
         Destroy(ghost);
         //RotateBlock();
@@ -224,9 +229,12 @@ public class DaddyBloc : MonoBehaviour {
     private float ghostAlpha = 0.5f;
     [SerializeField]
     private GameObject ghostPrefab;
+    [SerializeField]
+    private GameObject blinkPrefab;
 
     private BoxCollider2D collider;
     private bool isLaunched = false;
     private Vector2 position;
     private GameObject ghost;
+    private GameObject blinkInstance;
 }
