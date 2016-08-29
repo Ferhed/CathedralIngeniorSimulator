@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+
 
 public class Cathedral : MonoBehaviour
 {
@@ -18,7 +20,7 @@ public class Cathedral : MonoBehaviour
 
     public void Init()
     {
-        Invoke("spawnKamikaze", Random.RandomRange(2f, 5f));
+        Invoke("spawnKamikaze", Random.RandomRange(spawnEnemySpeedMin, spawnEnemySpeedMax));
     }
     // Use this for initialization
     void Start()
@@ -62,7 +64,7 @@ public class Cathedral : MonoBehaviour
             kami = Instantiate(kamikazePrefab, new Vector2(maxPelerinX + 50f, y_spawn), Quaternion.identity) as GameObject;
             Kamikaze kamikaze = kami.GetComponent<Kamikaze>();
         }
-        Invoke("spawnKamikaze", Random.Range(4.0f, 6.0f));
+        Invoke("spawnKamikaze", Random.Range(spawnEnemySpeedMin, spawnEnemySpeedMax));
     }
 
     public float getCompletion()
@@ -148,17 +150,35 @@ public class Cathedral : MonoBehaviour
 
     public void SubmitToGod()
     {
-        if(Submit()            
+        for (int i = 0; i < CameraScript.Instance.transform.childCount; i++)
+        {
+            Destroy(CameraScript.Instance.transform.GetChild(0).gameObject);
+        }
+        
+        var height = Camera.main.ScreenToWorldPoint(new Vector2(0.0f, Screen.height)).y;
+        GameObject go = Instantiate(blink, new Vector3(0.0f,height, 0.0f), Quaternion.identity)as GameObject;
+        go.transform.localScale = new Vector3(345f, height,0.0f);
+
+        if (Submit()            
             && MaxHeight > heightMinimum            
             && pilgrimNumber > pilgrimNeeded
             )
         {
-            Win();
+            //son win
+            Invoke( "Win",4.0f);
         }
         else
         {
-            Reset();
+            go.GetComponentInChildren<MeshRenderer>().material.color = Color.red;
+            //son no
+            Invoke("Reset", 4.0f);
+            Invoke("RelaunchScene", 9.0f);
         }
+    }
+
+    private void RelaunchScene()
+    {
+        SceneManager.LoadScene(0);
     }
 
     private void Win()
@@ -188,10 +208,6 @@ public class Cathedral : MonoBehaviour
             pilgr.Death();
             pilgrims.Remove(pilgr);
         }
-        var go = Instantiate(StartBlock);
-        go.transform.parent = transform;
-        go.transform.position = new Vector3(0.0f, 77.0f, 0.0f);
-        Canva.Instance.ResetTime();
     }
 
     [SerializeField]
@@ -216,6 +232,8 @@ public class Cathedral : MonoBehaviour
     private GameObject StartBlock;
     [SerializeField]
     private GameObject house;
+    [SerializeField]
+    private GameObject blink;
     [Header("VictoryValues")]
     [SerializeField]
     private float scoreAcceptance = 65.0f;
@@ -223,6 +241,11 @@ public class Cathedral : MonoBehaviour
     private float heightMinimum = 500.0f;
     [SerializeField]
     private int pilgrimNeeded= 10;
+    [Header("Value")]
+    [SerializeField]
+    private float spawnEnemySpeedMin = 3.0f;
+    [SerializeField]
+    private float spawnEnemySpeedMax = 5.0f;
 
     public int totalPelerin = 0;
     public int kamikazeKilled = 0;
