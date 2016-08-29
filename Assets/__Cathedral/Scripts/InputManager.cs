@@ -9,6 +9,7 @@ public class InputManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        SetCursor(cursorTextureNormal);
     }
 
     private void Update()
@@ -33,29 +34,26 @@ public class InputManager : MonoBehaviour
 
         Vector2 v = Camera.main.ScreenToWorldPoint(mousePosition);
 
-        Collider2D[] col = Physics2D.OverlapPointAll(v);
+        Collider2D col = Physics2D.OverlapPoint(v);
 
-        if (col.Length > 0)
+        if (col != null)
         {
-            foreach (Collider2D c in col)
+            if (col.transform.tag == "Bloc")
             {
-                if (c.transform.tag == "Bloc")
-                {
-                    c.transform.GetComponent<Bloc>().LaunchDestroyMe();
-                }
-                else if (c.transform.tag == "DaddyBloc")
-                {
-                    var daddy = c.transform.GetComponent<DaddyBloc>();
-                    daddy.stopBloc();
-                    daddyBloc = daddy;
-                    break;
-                }
-                else if (c.transform.tag == "Kamikaze")
-                {
-                    var kamikaze = c.transform.GetComponent<Kamikaze>();
-                    kamikaze.Explosion();
-                }
+                col.transform.GetComponent<Bloc>().LaunchDestroyMe();
             }
+            else if (col.transform.tag == "DaddyBloc")
+            {
+                var daddy = col.transform.GetComponent<DaddyBloc>();
+                daddy.stopBloc();
+                daddyBloc = daddy;
+            }
+            else if (col.transform.tag == "Kamikaze")
+            {
+                var kamikaze = col.transform.GetComponent<Kamikaze>();
+                kamikaze.Explosion();
+            }
+            ResetCursor();
         }
         /*else
         {
@@ -69,6 +67,22 @@ public class InputManager : MonoBehaviour
 
         }*/
     }
+
+    public Texture2D cursorTextureNormal;
+    public Texture2D cursorTextureKamikaze;
+    public Texture2D cursorTextureBloc;
+    public CursorMode cursorMode = CursorMode.Auto;
+
+    public void SetCursor(Texture2D cursor)
+    {
+        Cursor.SetCursor(cursor, new Vector2(cursor.width/2,cursor.height/2), cursorMode);
+    }
+
+    public void ResetCursor()
+    {
+        Cursor.SetCursor(cursorTextureNormal, new Vector2(cursorTextureNormal.width / 2, cursorTextureNormal.height / 2), cursorMode);
+    }
+
     [SerializeField]
     private float overlapRange = 0.3f;
 

@@ -8,7 +8,7 @@ public class Cathedral : MonoBehaviour
     public float MaxHeight { get; private set; }
     public float MaxBuildHeight { get { return maxBuildHeight; } }
     public BoxCollider2D GuideCollider { get; private set; }
-    
+
     void Awake()
     {
         Instance = this;
@@ -25,7 +25,7 @@ public class Cathedral : MonoBehaviour
         GameObject guideInstance2 = Instantiate(guide, new Vector2(0f, posY), Quaternion.identity) as GameObject;
         guideInstance2.transform.localScale = new Vector2(cathedraleWidth, maxBuildHeight);
         Destroy(guideInstance2.GetComponent<SpriteRenderer>());
-        GuideCollider = guideInstance.GetComponent<BoxCollider2D>();
+        GuideCollider = guideInstance2.GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
