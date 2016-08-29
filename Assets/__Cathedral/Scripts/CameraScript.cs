@@ -14,6 +14,11 @@ public class CameraScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        if(!Canva.Instance.GameIsLaunched)
+        {
+            return;
+        }
+
         var size_lerp = Mathf.Lerp(camera.orthographicSize, size, changeSpeed);
         var position_lerp = Mathf.Lerp(transform.position.y, positionY, changeSpeed);
 
@@ -31,7 +36,7 @@ public class CameraScript : MonoBehaviour {
 
     public void ScreenShake()
     {
-        transform.DOShakePosition(0.5f,5.0f);
+        transform.DOShakePosition(0.5f,screenShake);
     }
 
     [SerializeField]
@@ -40,6 +45,8 @@ public class CameraScript : MonoBehaviour {
     private float minSize = 250.0f;
     [SerializeField]
     private float maxSize = 600.0f;
+    [SerializeField]
+    private float screenShake = 10.0f;
 
     private Camera camera;
     private float positionY = 220.0f;

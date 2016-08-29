@@ -144,7 +144,8 @@ public class Bloc : MonoBehaviour
     }
 
     private IEnumerator DestroyMe()
-    {        
+    {
+        EffectManager.Instance.InstantiateFx(EffectManager.Instance.debris,transform.position);
         Destroy(GetComponent<SpriteRenderer>());
         yield return new WaitForSeconds(timeToDestruct);
         
@@ -213,6 +214,7 @@ public class Bloc : MonoBehaviour
                 var bloc = hit.transform.GetComponent<Bloc>();
                 if (bloc.IsWeakOnTop())
                 {
+                    EffectManager.Instance.InstantiateFx(EffectManager.Instance.debris, bloc.transform.position);
                     Destroy(bloc.gameObject);
                 }
             }

@@ -8,6 +8,7 @@ public class Kamikaze : MonoBehaviour {
 
 	void Awake()
     {
+        transform.parent = CameraScript.Instance.transform;
         deplacementActive = true;
         if (transform.position.x < 0)
         {
@@ -52,6 +53,7 @@ public class Kamikaze : MonoBehaviour {
         deplacementActive = false;
 
         var go = new GameObject();
+        go.transform.parent = CameraScript.Instance.transform;
         go.transform.position = transform.position + Vector3.up * loopingRadius;
         transform.parent = go.transform;
         var rotation = 0.0f;
@@ -71,7 +73,7 @@ public class Kamikaze : MonoBehaviour {
             yield return new WaitForEndOfFrame();
         }
         go.transform.rotation = Quaternion.identity;
-        transform.parent = null;
+        transform.parent = CameraScript.Instance.transform;
         Destroy(go);
 
         Direction = (Cathedral.Instance.transform.position + Vector3.up * 20.0f - transform.position).normalized;

@@ -13,6 +13,11 @@ public class Launcher : MonoBehaviour {
 	
     private void launch()
     {
+        if(!Canva.Instance.GameIsLaunched)
+        {
+            return;
+        }
+
         float posX = Random.Range(-spawnRange, spawnRange);
         if(posX>0)
             posX+=startSpawnRange;

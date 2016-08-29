@@ -18,7 +18,7 @@ public class DaddyBloc : MonoBehaviour {
         foreach(Collider2D col in GetComponentsInChildren<Collider2D>())
             col.isTrigger = true;
         launchLenght = Mathf.Abs(transform.position.x) * 2f;
-        launchHeight = Mathf.Max( Cathedral.Instance.MaxHeight, 250.0f) * 1.7f;
+        launchHeight = Mathf.Max( Cathedral.Instance.MaxHeight, 250.0f) * 1.5f;
         launchHeight += (Random.Range(-heightVariance, heightVariance))*launchHeight;
         launchDuration += (Random.Range(-0.5f, 0.5f)) * launchDuration;
         rotationSpeed += (Random.Range(-0.2f, 0.2f)) * rotationSpeed;
@@ -119,6 +119,7 @@ public class DaddyBloc : MonoBehaviour {
     {
         StopCoroutine("launch");
         collider.isTrigger = false;
+        EffectManager.Instance.InstantiateFx(EffectManager.Instance.picking, transform.position);
         RotateBlock();
         ghost = Instantiate(ghostPrefab) as GameObject;
         blinkInstance = Instantiate(blinkPrefab) as GameObject;
@@ -204,6 +205,16 @@ public class DaddyBloc : MonoBehaviour {
         {
             transform.rotation = Quaternion.Euler(0.0f, 0.0f, 270.0f);
         }*/
+    }
+
+    void OnMouseEnter()
+    {
+        InputManager.Instance.SetCursor(InputManager.Instance.cursorTextureBloc);
+    }
+
+    void OnMouseExit()
+    {
+        InputManager.Instance.SetCursor(InputManager.Instance.cursorTextureNormal);
     }
 
     [Header("Tweak")]
