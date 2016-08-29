@@ -14,6 +14,11 @@ public class CameraScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        if(!Canva.Instance.GameIsLaunched)
+        {
+            return;
+        }
+
         var size_lerp = Mathf.Lerp(camera.orthographicSize, size, changeSpeed);
         var position_lerp = Mathf.Lerp(transform.position.y, positionY, changeSpeed);
 

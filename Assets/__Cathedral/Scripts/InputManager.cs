@@ -13,7 +13,9 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0)
+            && Canva.Instance.GameIsLaunched
+            )
         {
             if(daddyBloc == null)
             {

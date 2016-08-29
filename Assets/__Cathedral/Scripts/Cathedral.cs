@@ -50,6 +50,11 @@ public class Cathedral : MonoBehaviour
     
     void spawnKamikaze()
     {
+        if(!Canva.Instance.GameIsLaunched)
+        {
+            return;
+        }
+
         GameObject kami;
         int side = Random.Range(0, 2);
         if (side == 0)
