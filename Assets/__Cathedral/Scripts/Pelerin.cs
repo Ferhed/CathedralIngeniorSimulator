@@ -17,7 +17,8 @@ public class Pelerin : MonoBehaviour {
         // blood FX
         GameObject tmp = deathMarks[Random.Range(0, deathMarks.Count)];
         Instantiate(tmp, new Vector2(transform.position.x, tmp.transform.position.y), Quaternion.identity);
-        Destroy(gameObject);
+        EffectManager.Instance.InstantiateFx(EffectManager.Instance.blood, transform.position);
+        Destroy(gameObject,0.1f);
     }
 
     [SerializeField]

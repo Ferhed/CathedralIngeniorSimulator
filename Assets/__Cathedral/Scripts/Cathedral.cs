@@ -163,9 +163,13 @@ public class Cathedral : MonoBehaviour
         }
         MaxHeight = 0.0f;
         CameraScript.Instance.ChangeDistance();
-        foreach(Pelerin pelerin in pilgrims)
+        
+        while(pilgrims.Count>0)
         {
-            pelerin.Death();
+            var pilgr = pilgrims[0];
+            pilgr.Death();
+            pilgrims.Remove(pilgr);
+
         }
     }
 

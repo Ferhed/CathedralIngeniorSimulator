@@ -130,6 +130,7 @@ public class Kamikaze : MonoBehaviour {
             }
         }
         CameraScript.Instance.ScreenShake();
+        EffectManager.Instance.InstantiateFx(EffectManager.Instance.kamikaze, transform.position);
         Destroy(gameObject);
     }
 

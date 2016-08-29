@@ -139,13 +139,12 @@ public class DaddyBloc : MonoBehaviour {
                 break;
             }
         }
-        GameObject zone = GameObject.FindGameObjectWithTag("Zone");
-        if (zone.GetComponent<BoxCollider2D>().bounds.Contains(transform.position))
+        if (Cathedral.Instance.GuideCollider.bounds.Contains(transform.position))
         {
             Cathedral.Instance.SpawnPelerin(pelerinToSpawn);
             released = false;
         }
-
+        EffectManager.Instance.InstantiateFx(EffectManager.Instance.fallOff, transform.position);
     }
 
     private void spawnPrefabGround()
