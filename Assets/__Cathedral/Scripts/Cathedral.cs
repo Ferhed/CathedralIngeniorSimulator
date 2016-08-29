@@ -164,13 +164,16 @@ public class Cathedral : MonoBehaviour
             && pilgrimNumber > pilgrimNeeded
             )
         {
-            //son win
+
+            MusicManager.instance.GetComponent<AudioSource>().volume /= 2f;
+            InputManager.Instance.GetComponent<AudioSource>().PlayOneShot(winSound);
             Invoke( "Win",4.0f);
         }
         else
         {
             go.GetComponentInChildren<MeshRenderer>().material.color = Color.red;
-            //son no
+            MusicManager.instance.GetComponent<AudioSource>().volume /= 2f;
+            InputManager.Instance.GetComponent<AudioSource>().PlayOneShot(loseSounds[Random.Range(0, loseSounds.Count)]);
             Invoke("Reset", 4.0f);
             Invoke("RelaunchScene", 9.0f);
         }
@@ -246,6 +249,10 @@ public class Cathedral : MonoBehaviour
     private float spawnEnemySpeedMin = 3.0f;
     [SerializeField]
     private float spawnEnemySpeedMax = 5.0f;
+    [SerializeField]
+    private AudioClip winSound;
+    [SerializeField]
+    private List<AudioClip> loseSounds = new List<AudioClip>();
 
     public int totalPelerin = 0;
     public int kamikazeKilled = 0;
