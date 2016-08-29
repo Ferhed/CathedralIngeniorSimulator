@@ -78,6 +78,7 @@ public class Cathedral : MonoBehaviour
 
     public void SpawnPelerin(int number)
     {
+        pilgrimNumber += number;
         for(int i = number;  number>0; number--)
         {
             float posX;
@@ -92,17 +93,17 @@ public class Cathedral : MonoBehaviour
             if (side > 50)
                 tmp.transform.localScale = new Vector3(-tmp.transform.localScale.x, tmp.transform.localScale.y, tmp.transform.localScale.z);
             // probably launch a coroutine with fade and movement
+            pilgrims.Add(tmp.GetComponent<Pelerin>());
         }
     }
 
-    public void Submit()
+    public bool Submit()
     {
         float score = EvaluateCathedrale();
-        Debug.Log("Completion at : " + (int)(score * 100) + "%");
         if (score > scoreAcceptance)
-            Debug.Log("You win");
+            return true;
         else
-            Debug.Log("You lose, noob ;)");
+            return false;
     }
 
     public void SubmitMyHeight(float height)
@@ -139,14 +140,41 @@ public class Cathedral : MonoBehaviour
         Gizmos.DrawCube(new Vector3(0f, posY, 0f), new Vector3(cathedraleWidth * blocSize, cathedraleHeight * blocSize, 0f));
     }
 
+    public void SubmitToGod()
+    {
+        if(Submit()            
+            && MaxHeight > heightMinimum            
+            && pilgrimNumber > pilgrimNeeded
+            )
+        {
+            Debug.Log("You Win");
+        }
+        else
+        {
+            Reset();
+        }
+    }
+
+    public void Reset()
+    {
+        foreach(Bloc bloc in GetComponentsInChildren<Bloc>())
+        {
+            bloc.LaunchActivePhysics();
+        }
+        MaxHeight = 0.0f;
+        CameraScript.Instance.ChangeDistance();
+        foreach(Pelerin pelerin in pilgrims)
+        {
+            pelerin.Death();
+        }
+    }
+
     [SerializeField]
     private DaddyBloc daddyPrefab;
     [SerializeField]
     private float cathedraleWidth;
     [SerializeField]
     private float cathedraleHeight;
-    [SerializeField]
-    private float scoreAcceptance;
     [SerializeField]
     private GameObject guide;
     [SerializeField]
@@ -157,7 +185,16 @@ public class Cathedral : MonoBehaviour
     private float maxBuildHeight = 600.0f;
     [SerializeField]
     private GameObject kamikazePrefab;
+    [Header("VictoryValues")]
+    [SerializeField]
+    private float scoreAcceptance = 65.0f;
+    [SerializeField]
+    private float heightMinimum = 500.0f;
+    [SerializeField]
+    private int pilgrimNeeded= 10;
 
+    private List<Pelerin> pilgrims = new List<Pelerin>();
+    private int pilgrimNumber = 0;
     private float completion;
     private float minPelerinX;
     private float maxPelerinX;

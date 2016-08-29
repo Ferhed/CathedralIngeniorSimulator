@@ -222,8 +222,6 @@ public class Bloc : MonoBehaviour
     [SerializeField]
     private float timeToDestruct = 0.5f;
     [SerializeField]
-    private float velocityForDestruct = 0.2f;
-    [SerializeField]
     private bool topWeakness = false;
     [SerializeField]
     private bool botWeakness = false;
@@ -235,6 +233,7 @@ public class Bloc : MonoBehaviour
     private Color brokenColor  = Color.red;
 
     private List<Transform> brothers = new List<Transform>();
+    private float velocityForDestruct = 5.0f;
     private Rigidbody2D rigidBody;
     private BoxCollider2D collider;
 }

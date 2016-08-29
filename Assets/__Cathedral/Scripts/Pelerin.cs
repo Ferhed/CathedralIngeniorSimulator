@@ -12,7 +12,7 @@ public class Pelerin : MonoBehaviour {
         }
     }
 
-    private void Death()
+    public void Death()
     {
         // blood FX
         GameObject tmp = deathMarks[Random.Range(0, deathMarks.Count)];
