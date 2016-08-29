@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+
 
 public class Cathedral : MonoBehaviour
 {
@@ -170,7 +172,13 @@ public class Cathedral : MonoBehaviour
             go.GetComponentInChildren<MeshRenderer>().material.color = Color.red;
             //son no
             Invoke("Reset", 4.0f);
+            Invoke("RelaunchScene", 9.0f);
         }
+    }
+
+    private void RelaunchScene()
+    {
+        SceneManager.LoadScene(0);
     }
 
     private void Win()
@@ -200,10 +208,6 @@ public class Cathedral : MonoBehaviour
             pilgr.Death();
             pilgrims.Remove(pilgr);
         }
-        var go = Instantiate(StartBlock);
-        go.transform.parent = transform;
-        go.transform.position = new Vector3(0.0f, 77.0f, 0.0f);
-        Canva.Instance.ResetTime();
     }
 
     [SerializeField]
